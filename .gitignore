@@ -1,0 +1,14 @@
+.claude/
+.git/
+claude.md
+.ruff_cache/
+bin/
+__pycache__/
+**/__pycache__/
+**/*.pycs
+CLAUDE.md
+data_all/
+.idea/
+.venv/
+.venv_anon/
+legacy_old_do_not_use/
