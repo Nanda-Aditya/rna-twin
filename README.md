@@ -68,8 +68,6 @@ fixed thresholds (see [How we evaluate](#how-we-evaluate)).
 | TSTR ROC-AUC | ≥ TRTR − 0.05 | 0.878 ± 0.035 ✅ | 0.893 ± 0.027 ✅ | 0.573 ± 0.044 ✅ |
 | SHAP Pearson r | ≥ 0.8 | 0.949 ± 0.012 ✅ | 0.881 ± 0.043 ✅ | 0.828 ± 0.056 ✅ |
 
-TCGA stage is hard to predict even from real data (TRTR 0.57). What matters is that TSTR
-matches TRTR.
 
 **Differential expression.** Recall is the share of real DE genes that are also significant
 in the synthetic cohort at the relaxed threshold. Slope is synthetic on real log2FC; below 1
@@ -86,7 +84,6 @@ means synthetic effects are shrunk.
 
 STK11 is the useful counterexample. It wasn't an anchor variable. The effect sizes still
 correlate (r = 0.88), but recall drops to 69% and effects shrink by about 30%.
-Anchor the variables you care about, and check unanchored endpoints yourself.
 
 **Privacy.**
 
@@ -101,14 +98,6 @@ A DCR ratio near 1 means synthetic records are no closer to training patients th
 patients are to each other. Excess success is the attack's success rate on training patients
 minus its rate on held-out patients. Each row reports the median of the 10 highest per-secret
 means. Neither test is a privacy guarantee.
-
-> [!WARNING]
-> These results cover the tested targets, contrasts, gene subsets, and classifier. We haven't
-> tested survival models, pathway enrichment, network inference, rare variants, or external
-> cohorts. The full-cohort comparisons are in-sample, because the full synthetic cohort was
-> generated from every real sample. Use the data for exploration, method development, and
-> teaching, and confirm anything that matters on real data. It isn't validated for clinical
-> or regulatory use.
 
 ## The cohorts
 
