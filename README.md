@@ -312,7 +312,7 @@ If you use the benchmark or the data, please cite this repository:
 ```bibtex
 @software{nanda2026rnatwin,
   title  = {rna-twin: synthetic bulk RNA-seq cohorts and benchmark},
-  author = {Nanda, Aditya and Saha, Somdutta},
+  author = {Nanda, Aditya},
   year   = {2026},
   url    = {https://github.com/Nanda-Aditya/rna-twin}
 }
