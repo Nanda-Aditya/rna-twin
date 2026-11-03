@@ -38,7 +38,7 @@ if missing:
             webbrowser.open(url)
             input("After accepting the DUA in your browser, press Enter to continue: ")
             api.auth_check(repo, repo_type="dataset")
-        revision = api.repo_info(repo, repo_type="dataset", revision="v1.0.1").sha
+        revision = api.repo_info(repo, repo_type="dataset", revision="v1.0.0").sha
         for filename, destination, output in missing:
             print(f"Downloading {filename}", flush=True)
             cached = hf_hub_download(repo, filename, repo_type="dataset",

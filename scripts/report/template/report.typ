@@ -589,9 +589,9 @@ with the same names and #raw("artifacts/") subfolder.
   (#files.clinical_columns.map(raw).join(", ")) and #files.n_genes gene columns.
   #if files.release_only.len() > 0 [The full release also contains #files.release_only.map(raw).join(", "), which the fold files do not.]
   #if files.fold_only.len() > 0 [The fold files also contain #files.fold_only.map(raw).join(", "), which the full release does not.]
-- *Counts.* Gene values are raw, unnormalized, non-negative integer counts: no
+- #if files.cohort == "tcga_luad" [*Values.* Gene values are non-negative integers on the scale of the source data, upper-quartile-normalized RSEM (each sample's 75th percentile of non-zero genes is about 1,000), not read counts. No log transform has been applied.] else [*Counts.* Gene values are raw, unnormalized, non-negative integer counts: no
   library-size normalization or log transform has been applied. Normalize them as any
-  RNA-seq count matrix (e.g. DESeq2 size factors or log CPM).
+  RNA-seq count matrix (e.g. DESeq2 size factors or log CPM).]
 - *Gene IDs.* Gene columns keep the source study's identifiers: #files.n_ensembl Ensembl
   gene IDs (e.g. #raw(files.ensembl_example), #if files.versioned [with] else [without] version suffixes)#if files.n_symbols != "0" [ and #files.n_symbols gene symbols (e.g. #files.symbol_examples.map(raw).join(" and ")), as distributed by the source; some may be retired HGNC symbols]. The #raw("gene_symbol") column of the DE files maps Ensembl IDs with a packaged HGNC table; unmapped names are kept as they are.
 

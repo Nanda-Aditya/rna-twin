@@ -193,7 +193,7 @@ uv run python scripts/cv_trn.py datasets/sepsis/real_data datasets/sepsis/dbTwin
   NumPy 1.x, and the benchmark finds that environment on its own.
 - Logs in to Hugging Face. If you haven't accepted the agreement yet, it opens the dataset page
   and waits.
-- Downloads any missing synthetic CSVs (18 files, about 438 MB) from the `v1.0.1` snapshot.
+- Downloads any missing synthetic CSVs (18 files, about 438 MB) from the `v1.0.0` snapshot.
   HF `<cohort>/syn_<cohort>.csv` goes to `datasets/<cohort>/dbTwin/`, and HF
   `<cohort>/artifacts/syn_<cohort>_fold_<k>.csv` goes to `datasets/<cohort>/dbTwin/artifacts/`.
   Existing files are kept, so rerunning it resumes an interrupted download.
