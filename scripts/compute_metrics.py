@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
-"""Compute benchmark metrics from real and synthetic split data."""
+"""Compute full-cohort fidelity and split-based ML and privacy metrics."""
 
 import argparse
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+# Resolve helpers from this repository before editable installations.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from bench_utils.attr_infer import compute_secret_risk
 from bench_utils.clinical_fidelity import compute_clinical_fidelity
+from bench_utils.config import de_metric_rows
 from bench_utils.de_ml_utils import compute_shap_correlation
-from bench_utils.gexp_de import de_computes
-from bench_utils.ml_wrapper import tune_and_train
-from bench_utils.privacy_metrics import (
-    compute_expression_privacy_metrics,
-)
+from bench_utils.expression import log_cpm, n_ml_features, top_variable_genes
+from bench_utils.gexp_de import gexp_de
+from bench_utils.ml_wrapper import train_trtr_tstr
+from bench_utils.privacy_metrics import compute_dcr
 from bench_utils.umap_coexp import (
     compute_coexpression_artifacts,
     compute_umap_artifacts,
@@ -22,214 +26,207 @@ from bench_utils.umap_coexp import (
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("input_dir", type=Path)
 parser.add_argument("output_dir", type=Path)
-parser.add_argument("--target", required=True)
-parser.add_argument("--context-cols", required=True)
+parser.add_argument("--ml-target", required=True)
+parser.add_argument("--manifest", type=Path)
+parser.add_argument("--full-synthetic", type=Path)
+parser.add_argument("--anchor-cols", required=True)
+parser.add_argument("--qi-cols", nargs="*", required=True)
 parser.add_argument("--n-genes-aux", type=int, default=50)
 parser.add_argument("--n-genes-secret", type=int, default=50)
-parser.add_argument("--contrast", nargs=2, action="append", metavar=("CASE", "REFERENCE"))
+parser.add_argument("--n-genes-de", type=int, default=6000,
+                    help="Number of DE genes; -1 uses all genes.")
+parser.add_argument("--contrast", nargs=3, action="append",
+                    metavar=("COLUMN", "CASE", "REFERENCE"))
 args = parser.parse_args()
-if args.n_genes_aux < 0 or args.n_genes_secret < 0:
+dataset_dir = args.input_dir.resolve()
+dataset_name = (dataset_dir.parent.name if dataset_dir.name == "real_data"
+                else dataset_dir.name)
+if min(args.n_genes_aux, args.n_genes_secret) < 0:
     parser.error("gene counts must be non-negative")
-context_cols = [column.strip() for column in args.context_cols.split(",")]
+if args.n_genes_de < -1:
+    parser.error("--n-genes-de must be -1 (all genes) or non-negative")
+anchor_cols = [column.strip() for column in args.anchor_cols.split(",")]
 
-clinical = pd.read_csv(args.input_dir / "clinical.csv", index_col=0)
-expression = pd.read_csv(args.input_dir / "expression.csv", index_col=0)
-manifest = pd.read_csv(args.input_dir / "split_manifest.csv", dtype={"sample_id": str})
+clinical = pd.read_csv(args.input_dir / "metadata.csv", index_col=0)
+expression = pd.read_csv(args.input_dir / "expression.csv.gz", index_col=0)
+manifest = pd.read_csv(
+    args.manifest or args.input_dir / "split_manifest.csv",
+    dtype={"sample_id": str},
+)
 cv_results = pd.read_csv(args.output_dir / "cv_results.csv")
 clinical.index = clinical.index.map(str)
 expression.index = expression.index.map(str)
 real = expression.join(clinical, how="inner")
+full_syn = pd.read_csv(
+    args.full_synthetic or args.output_dir.parent / f"syn_{dataset_name}.csv", index_col=0
+)
 genes = expression.columns.to_numpy()
-contrasts = args.contrast or []
+contrasts = [tuple(contrast) for contrast in args.contrast or []]
 if not contrasts:
-    labels = sorted(real[args.target].dropna().unique())
-    if len(labels) != 2:
-        raise ValueError("Explicit --contrast CASE REFERENCE required for multiclass DE")
-    contrasts = [(str(labels[1]), str(labels[0]))]
-contrasts = [tuple(pair) for pair in contrasts]
+    parser.error("at least one --contrast COLUMN CASE REFERENCE is required")
 selected_params = cv_results.loc[
     cv_results["selected"], ["C", "l1_ratio"]
 ].drop_duplicates()
 if len(selected_params) != 1:
     raise ValueError("Expected one selected C and l1_ratio; rerun cv_trn.py")
-hyp_params = {
-    "clf__C": selected_params.iloc[0]["C"],
-    "clf__l1_ratio": selected_params.iloc[0]["l1_ratio"],
-}
-clinical_qi = [column for column in context_cols if column != args.target]
-clinical_secrets = [args.target, *(
+C, l1_ratio = selected_params.iloc[0]
+clinical_qi = args.qi_cols
+clinical_secrets = [
     column for column in clinical
-    if column not in [args.target, *clinical_qi] and "id" not in column.lower()
-)]
+    if column not in clinical_qi and "id" not in column.lower()
+]
 values = {
     "roc_auc_trtr": ("ML", []),
     "roc_auc_tstr": ("ML", []),
     "privacy_p5_ratio": ("Privacy", []),
     "privacy_median_ratio": ("Privacy", []),
-    "umap_mmd": ("Privacy", []),
-    "coexpression_spearman": ("Privacy", []),
-    "attribute_inference_standard": ("Privacy", []),
-    "attribute_inference_clinical_qi": ("Privacy", []),
+    "umap_mmd": ("Global fidelity", []),
+    "coexpression_spearman": ("Global fidelity", []),
 }
 real_shap, synthetic_shap = [], []
-real_de = [[] for _ in contrasts]
-synthetic_de = [[] for _ in contrasts]
 attribute_inference, dcr = [], []
-class_labels = None
 splits = [str(split) for split, _ in manifest.groupby("split", sort=True)]
-artifacts = {"splits": np.asarray(splits), "contrasts": np.asarray(contrasts),
-             "target": np.asarray(args.target),
-             "context_cols": np.asarray(context_cols, dtype=str),
+artifacts = {"splits": np.asarray(splits),
+             "contrasts": np.asarray([contrast[1:] for contrast in contrasts]),
+             "contrast_columns": np.asarray([contrast[0] for contrast in contrasts]),
+             "target": np.asarray(args.ml_target),
+             "anchor_cols": np.asarray(anchor_cols, dtype=str),
+             "qi_cols": np.asarray(clinical_qi, dtype=str),
+             "clinical_secrets": np.asarray(clinical_secrets, dtype=str),
              "n_genes_aux": np.asarray(args.n_genes_aux),
-             "n_genes_secret": np.asarray(args.n_genes_secret)}
-d_strn, d_stst = [], []
-clinical_metrics, clinical_data = [], []
+             "n_genes_secret": np.asarray(args.n_genes_secret),
+             "n_genes_de": np.asarray(args.n_genes_de)}
+d_st, d_tt = [], []
 
 for fold, (split, rows) in enumerate(manifest.groupby("split", sort=True), start=1):
     partition = rows["partition"].str.lower()
     trn = real.loc[rows.loc[partition == "train", "sample_id"]]
     tst = real.loc[rows.loc[partition == "test", "sample_id"]]
-    syn = pd.read_csv(args.output_dir / f"df_syn_{split}.csv", index_col=0)
-    phtp_cols = list(dict.fromkeys([args.target, *context_cols]))
-    phtp0, phtp1 = trn[phtp_cols].copy(), syn[phtp_cols].copy()
-    clinical_metrics.append(
-        compute_clinical_fidelity(phtp0, phtp1, args.target, context_cols)
-        .assign(split=split)
+    syn = pd.read_csv(args.output_dir / f"syn_{dataset_name}_fold_{fold}.csv", index_col=0)
+    x_trn, x_tst, x_syn = (log_cpm(frame[genes]) for frame in (trn, tst, syn))
+    ml_real, ml_syn, ml_genes = train_trtr_tstr(
+        x_trn, trn[args.ml_target], x_syn, syn[args.ml_target], x_tst, tst[args.ml_target],
+        n_ml_features(len(trn), len(genes)), C, l1_ratio,
     )
-    for source, frame in (("real", phtp0), ("synthetic", phtp1)):
-        clinical_data.append(frame.assign(split=split, source=source))
-    n_features = max(1, min(270, int(len(trn) * 0.9), len(genes)))
-    ml_real, ml_syn, _, _, ml_genes = tune_and_train(
-        trn, tst, syn, syn, syn, args.target, genes, n_features,
-        hyp_params=hyp_params, do_dbtwin=True,
-    )
+    # Both models share the sorted class order, which SHAP arrays and class_labels follow.
+    class_labels = list(ml_real["classes"])
+    if list(ml_syn["classes"]) != class_labels:
+        raise ValueError(f"Split {split}: synthetic classes {list(ml_syn['classes'])} "
+                         f"differ from real classes {class_labels}")
     values["roc_auc_trtr"][1].append(np.mean(ml_real["auc"]))
     values["roc_auc_tstr"][1].append(np.mean(ml_syn["auc"]))
-    if class_labels is None:
-        class_labels = list(ml_real["orig_classes_"])
     for kind, model, shap_values in (("real", ml_real, real_shap),
                                     ("synthetic", ml_syn, synthetic_shap)):
-        shap_array = np.asarray(model["shap"])
-        if shap_array.ndim == 3:
-            model_labels = list(model["orig_classes_"])
-            order = [model_labels.index(label) for label in class_labels]
-            shap_array = shap_array[:, :, order]
-        shap_values.append(shap_array)
-        artifacts[f"f{fold}_{kind}_shap"] = shap_array
+        shap_values.append(np.asarray(model["shap"]))
+        artifacts[f"f{fold}_{kind}_shap"] = shap_values[-1]
         artifacts[f"f{fold}_{kind}_auc"] = np.asarray(np.mean(model["auc"]))
     artifacts[f"f{fold}_shap_genes"] = np.asarray(ml_genes, dtype=str)
 
-    privacy = compute_expression_privacy_metrics(trn, syn, tst, genes)
-    fold_d_strn = np.asarray(privacy["d_strn"]).ravel()
-    fold_d_stst = np.asarray(privacy["d_stst"]).ravel()
-    d_strn.append(fold_d_strn)
-    d_stst.append(fold_d_stst)
+    privacy = compute_dcr(x_trn, x_syn)
+    fold_d_st = np.asarray(privacy["d_st"]).ravel()
+    fold_d_tt = np.asarray(privacy["d_stst"]).ravel()
+    d_st.append(fold_d_st)
+    d_tt.append(fold_d_tt)
     dcr.extend(
-        {"split": split, "sample_id": str(sample_id),
-         "dcr_synthetic_train": train, "dcr_synthetic_test": test}
-        for sample_id, train, test in zip(
-            syn.index, fold_d_strn, fold_d_stst
-        )
+        {"split": split, "comparison": "syn_trn", "sample_id": str(sample_id),
+         "distance": distance}
+        for sample_id, distance in zip(syn.index, fold_d_st)
     )
-    values["privacy_p5_ratio"][1].append(
-        np.percentile(privacy["d_strn"], 5)
-        / np.percentile(privacy["d_stst"], 5)
+    dcr.extend(
+        {"split": split, "comparison": "trn_trn", "sample_id": str(sample_id),
+         "distance": distance}
+        for sample_id, distance in zip(trn.index, fold_d_tt)
     )
+    values["privacy_p5_ratio"][1].append(privacy["p5_ratio"])
     values["privacy_median_ratio"][1].append(
-        np.median(privacy["d_strn"]) / np.median(privacy["d_stst"])
+        np.median(fold_d_st) / np.median(fold_d_tt)
     )
-    umap, mmd = compute_umap_artifacts(trn, {"dbt": syn}, genes, args.target)
-    co_genes, co_real, co_syn, coexpression = compute_coexpression_artifacts(
-        trn, {"dbt": syn}, genes
-    )
-    for key, array in umap["dbt"].items():
-        dtype = str if key.endswith("target") else float
-        artifacts[f"f{fold}_umap_{key}"] = np.asarray(array, dtype=dtype)
-    artifacts[f"f{fold}_umap_mmd"] = np.asarray(mmd["dbt"])
-    artifacts[f"f{fold}_coexpression_genes"] = np.asarray(co_genes, dtype=str)
-    artifacts[f"f{fold}_coexpression_real"] = co_real
-    artifacts[f"f{fold}_coexpression_synthetic"] = co_syn["dbt"]
-    artifacts[f"f{fold}_coexpression_rho"] = np.asarray(coexpression["dbt"])
-    values["umap_mmd"][1].append(mmd["dbt"])
-    values["coexpression_spearman"][1].append(coexpression["dbt"])
-
-    mad = syn[genes].sub(syn[genes].median()).abs().median()
-    ranked_genes = mad.nlargest(
-        min(args.n_genes_aux + args.n_genes_secret, len(genes))
-    ).index.tolist()
+    ranked_genes = top_variable_genes(
+        x_syn, min(args.n_genes_aux + args.n_genes_secret, len(genes))
+    ).tolist()
     attack_genes = ranked_genes[:args.n_genes_aux]
     secret_genes = ranked_genes[args.n_genes_aux:]
+    # The attacker's genes are log2(CPM + 1); gene secrets keep their released raw counts.
+    attack_trn, attack_syn, attack_tst = (
+        frame.drop(columns=attack_genes).join(x[attack_genes])
+        for frame, x in ((trn, x_trn), (syn, x_syn), (tst, x_tst))
+    )
     for secret in [*clinical_secrets, *secret_genes]:
         for attack, gene_aux in (("standard", attack_genes),
                                  ("clinical_qi", [])):
             result = compute_secret_risk(
-                trn, syn, tst, gene_aux, clinical_qi, secret, 42 + fold
+                attack_trn, attack_syn, attack_tst, gene_aux, clinical_qi, secret, 42 + fold
             ) if gene_aux or clinical_qi else None
             attribute_inference.append(
                 {"split": split, "attack": attack, "secret": secret,
                  **(result or {})}
             )
-            values[f"attribute_inference_{attack}"][1].append(
-                result["training_attack_success_rate"]
-                - result["control_attack_success_rate"] if result else np.nan
-            )
 
-    de_genes = trn[genes].sub(trn[genes].median()).abs().median().nlargest(6000).index
-    artifacts[f"f{fold}_de_genes"] = np.asarray(de_genes, dtype=str)
-    for contrast_index, contrast in enumerate(contrasts):
-        for kind, frame, results in (("real", trn, real_de[contrast_index]),
-                                     ("synthetic", syn,
-                                      synthetic_de[contrast_index])):
-            result = de_computes(frame[[*de_genes, args.target]], args.target, contrast)
-            results.append(result)
-            aligned = pd.DataFrame({"lfc": result["lfc_all"],
-                                    "padj": result["padj_all"]}, index=result["genes_all"])
-            aligned = aligned.reindex(de_genes)
-            artifacts[f"f{fold}_c{contrast_index}_{kind}_lfc"] = aligned["lfc"].to_numpy()
-            artifacts[f"f{fold}_c{contrast_index}_{kind}_padj"] = aligned["padj"].to_numpy()
+phtp_cols = list(dict.fromkeys([args.ml_target, *anchor_cols]))
+phtp0, phtp1 = real[phtp_cols], full_syn[phtp_cols]
+clinical_metrics = compute_clinical_fidelity(phtp0, phtp1, args.ml_target, anchor_cols)
+clinical_data = pd.concat(
+    frame.assign(source=source) for source, frame in (("real", phtp0), ("synthetic", phtp1))
+)
+
+x_real, x_full_syn = log_cpm(real[genes]), log_cpm(full_syn[genes])
+umap_real, umap_syn, mmd = compute_umap_artifacts(x_real, x_full_syn)
+co_genes, co_real, co_syn, coexpression = compute_coexpression_artifacts(x_real, x_full_syn)
+for kind, embedding, frame in (("real", umap_real, real), ("synthetic", umap_syn, full_syn)):
+    artifacts[f"full_umap_{kind}"] = np.asarray(embedding, dtype=float)
+    artifacts[f"full_umap_{kind}_target"] = np.asarray(frame[args.ml_target], dtype=str)
+artifacts["full_umap_mmd"] = np.asarray(mmd)
+artifacts["full_coexpression_genes"] = np.asarray(co_genes, dtype=str)
+artifacts["full_coexpression_real"] = co_real
+artifacts["full_coexpression_synthetic"] = co_syn
+artifacts["full_coexpression_rho"] = np.asarray(coexpression)
+values["umap_mmd"][1].append(mmd)
+values["coexpression_spearman"][1].append(coexpression)
+
+# DESeq2 fits raw counts; -1 tests all genes, otherwise the most variable real log2(CPM + 1) genes.
+de_genes = genes if args.n_genes_de == -1 else top_variable_genes(x_real, args.n_genes_de)
+artifacts["full_de_genes"] = np.asarray(de_genes, dtype=str)
+# DE summaries keep the 80% of tested genes with the highest mean CPM in the real cohort.
+mean_cpm = real[genes].div(real[genes].sum(axis=1), axis=0)[de_genes].mean() * 1e6
+artifacts["full_de_expression_mask"] = (mean_cpm >= mean_cpm.quantile(0.20)).to_numpy()
+for contrast_index, (column, case, reference) in enumerate(contrasts):
+    for kind, frame in (("real", real), ("synthetic", full_syn)):
+        result = gexp_de(frame[[*de_genes, column]], column, (case, reference)).reindex(de_genes)
+        artifacts[f"full_c{contrast_index}_{kind}_lfc"] = result["log2FoldChange"].to_numpy()
+        artifacts[f"full_c{contrast_index}_{kind}_padj"] = result["padj"].to_numpy()
 
 rows = []
 for metric, (section, metric_values) in values.items():
     array = np.asarray(metric_values, dtype=float)
     rows.append((section, metric, "mean", np.nanmean(array), np.nanstd(array), len(array)))
 
-shap = compute_shap_correlation(real_shap, synthetic_shap, sp_k=50, r_k=50)
-rows.extend((
-    ("ML", "shap_pearson", "median", np.nanmean(shap["median_r"]),
-     np.nanmean(shap["std_r"]), len(real_shap)),
-    ("ML", "shap_spearman", "median", np.nanmean(shap["median_sp_rho"]),
-     np.nanmean(shap["std_sp_rho"]), len(real_shap)),
-))
-for contrast_index, (contrast, real_results, synthetic_results) in enumerate(
-    zip(contrasts, real_de, synthetic_de)):
-    contrast_name = "_vs_".join(map(str, contrast))
-    real_counts, synthetic_counts, overlap_counts, lfc_corrs = [], [], [], []
-    for fold in range(1, len(real_results) + 1):
-        prefix = f"f{fold}_c{contrast_index}_"
-        real_padj = artifacts[f"{prefix}real_padj"]
-        synthetic_padj = artifacts[f"{prefix}synthetic_padj"]
-        real_lfc = artifacts[f"{prefix}real_lfc"]
-        synthetic_lfc = artifacts[f"{prefix}synthetic_lfc"]
-        real_sig, synthetic_sig = real_padj < 0.05, synthetic_padj < 0.10
-        overlap = real_sig & synthetic_sig
-        real_counts.append(np.count_nonzero(real_sig))
-        synthetic_counts.append(np.count_nonzero(synthetic_sig))
-        overlap_counts.append(np.count_nonzero(overlap))
-        selected = overlap & np.isfinite(real_lfc) & np.isfinite(synthetic_lfc)
-        x, y = real_lfc[selected], synthetic_lfc[selected]
-        r = (np.corrcoef(x, y)[0, 1] if len(x) > 1 and
-             np.std(x) > 0 and np.std(y) > 0 else np.nan)
-        lfc_corrs.append(r)
-        artifacts[f"{prefix}lfc_pearson"] = np.asarray(r)
-    rows.append(("DE", f"DE_{contrast_name}_lfc_pearson", "mean",
-                 np.nanmean(lfc_corrs), np.nanstd(lfc_corrs), len(lfc_corrs)))
-    for name, fold_counts in (
-        ("real_de_genes", real_counts),
-        ("synthetic_de_genes", synthetic_counts),
-        ("overlap_de_genes", overlap_counts),
-    ):
-        rows.append(("DE", f"DE_{contrast_name}_{name}", "mean",
-                     np.mean(fold_counts), np.std(fold_counts), len(fold_counts)))
+# Attribute inference excess is training minus control success, averaged per secret over
+# splits; each attack reports the median of its 10 largest secret means and the count above 0.2.
+attacks = pd.DataFrame(attribute_inference)
+attacks["excess"] = (attacks["training_attack_success_rate"]
+                     - attacks["control_attack_success_rate"])
+for attack in ("standard", "clinical_qi"):
+    scored = attacks.loc[(attacks["attack"] == attack) & np.isfinite(attacks["excess"])]
+    secret_means = scored.groupby("secret")["excess"].mean()
+    n_scored = scored["split"].nunique()
+    rows += [("Privacy", f"attribute_inference_{attack}", "median_top10",
+              secret_means.nlargest(10).median(), np.nan, n_scored),
+             ("Privacy", f"attribute_inference_{attack}_columns_gt_02", "count",
+              (secret_means > 0.2).sum() if n_scored else np.nan, np.nan, n_scored)]
+
+shap =compute_shap_correlation(real_shap, synthetic_shap, sp_k=50, r_k=50)
+for metric, suffix, raw in (("shap_pearson", "r", "raw_correlations_r"),
+                            ("shap_spearman", "sp_rho", "raw_correlations_sp")):
+    means, stds = np.atleast_1d(shap[f"mean_{suffix}"]), np.atleast_1d(shap[f"std_{suffix}"])
+    valid_folds = np.isfinite(shap[raw]).reshape(len(real_shap), -1).any(axis=1)
+    rows.append(("ML", metric, "mean",
+                 np.nanmean(means) if np.isfinite(means).any() else np.nan,
+                 np.nanmean(stds) if np.isfinite(stds).any() else np.nan,
+                 np.count_nonzero(valid_folds)))
+de_rows, de_lfc_r = de_metric_rows(artifacts, contrasts, artifacts["full_de_expression_mask"])
+rows.extend(de_rows)
+for contrast_index, r in enumerate(de_lfc_r):
+    artifacts[f"full_c{contrast_index}_lfc_pearson"] = np.asarray(r)
 
 args.output_dir.mkdir(parents=True, exist_ok=True)
 metrics = pd.DataFrame(
@@ -237,31 +234,29 @@ metrics = pd.DataFrame(
 )
 metrics["class_label"] = ""
 labels = class_labels if np.asarray(real_shap[0]).ndim == 3 else class_labels[1:2]
-for metric, correlations in (
-    ("shap_pearson", shap["raw_correlations_r"]),
-    ("shap_spearman", shap["raw_correlations_sp"]),
+for metric, correlations, means, stds in (
+    ("shap_pearson", shap["raw_correlations_r"], shap["mean_r"], shap["std_r"]),
+    ("shap_spearman", shap["raw_correlations_sp"], shap["mean_sp_rho"], shap["std_sp_rho"]),
 ):
     fold_values = pd.DataFrame(correlations, columns=labels)
-    for label in labels:
+    for index, label in enumerate(labels):
         values = fold_values[label].dropna()
         metrics.loc[len(metrics)] = (
-            "ML", f"{metric} [{label}]", "mean", values.mean(),
-            values.std(ddof=0), len(values), label,
+            "ML", f"{metric} [{label}]", "mean", np.atleast_1d(means)[index],
+            np.atleast_1d(stds)[index], len(values), label,
         )
 metrics.to_csv(args.output_dir / "metrics.csv", index=False)
 pd.DataFrame(attribute_inference).to_csv(
     args.output_dir / "attribute_inference.csv", index=False
 )
 pd.DataFrame(dcr).to_csv(args.output_dir / "dcr.csv", index=False)
-pd.concat(clinical_metrics, ignore_index=True).to_csv(
-    args.output_dir / "clinical_fidelity_metrics.csv", index=False
-)
-pd.concat(clinical_data).to_csv(
-    args.output_dir / "clinical_fidelity_data.csv", index=False
-)
+clinical_metrics.to_csv(args.output_dir / "clinical_fidelity_metrics.csv", index=False)
+clinical_data.to_csv(args.output_dir / "clinical_fidelity_data.csv", index=False)
 artifacts["class_labels"] = np.asarray(class_labels, dtype=str)
-artifacts["dcr_synthetic_train"] = np.concatenate(d_strn)
-artifacts["dcr_synthetic_test"] = np.concatenate(d_stst)
-for key in ("median_r", "std_r", "median_sp_rho", "std_sp_rho"):
+artifacts["dcr_syn_trn"] = np.concatenate(d_st)
+artifacts["dcr_trn_trn"] = np.concatenate(d_tt)
+for key in ("mean_r", "std_r", "mean_sp_rho", "std_sp_rho"):
     artifacts[f"shap_{key}"] = np.asarray(shap[key], dtype=float)
+for key in ("raw_correlations_r", "raw_correlations_sp", "signal_failures"):
+    artifacts[f"shap_{key}"] = np.asarray(shap[key])
 np.savez_compressed(args.output_dir / "benchmark_artifacts.npz", **artifacts)

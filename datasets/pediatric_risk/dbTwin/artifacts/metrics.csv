@@ -1,0 +1,41 @@
+section,metric,statistic,value,std,n_splits,class_label
+ML,roc_auc_trtr,mean,0.8802706699238335,0.0323238825465074,5,
+ML,roc_auc_tstr,mean,0.8779307759180182,0.0345726353276267,5,
+Privacy,privacy_p5_ratio,mean,0.9162632072421808,0.010527215111628,5,
+Privacy,privacy_median_ratio,mean,0.976207472057748,0.008358634450392,5,
+Global fidelity,umap_mmd,mean,0.0215639900416135,0.0,1,
+Global fidelity,coexpression_spearman,mean,0.9963329216626932,0.0,1,
+Privacy,attribute_inference_standard,median_top10,0.09397189476526308,,5,
+Privacy,attribute_inference_standard_columns_gt_02,count,1.0,,5,
+Privacy,attribute_inference_clinical_qi,median_top10,0.02948049813147485,,5,
+Privacy,attribute_inference_clinical_qi_columns_gt_02,count,0.0,,5,
+ML,shap_pearson,mean,0.9485477398089764,0.0124179088946145,5,
+ML,shap_spearman,mean,0.9036024824676492,0.0247793231452399,5,
+DE,DE_Crohn's disease_vs_cntrl_lfc_pearson,mean,0.9925622311243029,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_lfc_slope,mean,1.0036488055731452,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_real_de_genes,mean,5641.0,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_synthetic_de_genes_padj_005,mean,5700.0,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_overlap_de_genes_padj_005,mean,5124.0,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_overlap_fraction_padj_005,mean,0.9083495834071973,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_precision_padj_005,mean,0.8989473684210526,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_synthetic_de_genes_padj_0075,mean,7218.0,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_overlap_de_genes_padj_0075,mean,5420.0,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_overlap_fraction_padj_0075,mean,0.9608225491934054,0.0,1,
+DE,DE_Crohn's disease_vs_cntrl_precision_padj_0075,mean,0.7509005264616238,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_lfc_pearson,mean,0.9798462189132845,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_lfc_slope,mean,0.950050143985141,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_real_de_genes,mean,1169.0,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_synthetic_de_genes_padj_005,mean,1120.0,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_overlap_de_genes_padj_005,mean,841.0,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_overlap_fraction_padj_005,mean,0.7194183062446535,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_precision_padj_005,mean,0.7508928571428571,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_synthetic_de_genes_padj_0075,mean,1473.0,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_overlap_de_genes_padj_0075,mean,955.0,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_overlap_fraction_padj_0075,mean,0.8169375534644996,0.0,1,
+DE,DE_ulcerative colitis_vs_cntrl_precision_padj_0075,mean,0.648336727766463,0.0,1,
+ML,shap_pearson [Crohn's disease],mean,0.943557659416208,0.0129466394253836,5,Crohn's disease
+ML,shap_pearson [cntrl],mean,0.926757851539002,0.0195948286012975,5,cntrl
+ML,shap_pearson [ulcerative colitis],mean,0.975327708471719,0.0047122586571625,5,ulcerative colitis
+ML,shap_spearman [Crohn's disease],mean,0.8858190451469025,0.035213379035483,5,Crohn's disease
+ML,shap_spearman [cntrl],mean,0.8830987512862067,0.0274231971335629,5,cntrl
+ML,shap_spearman [ulcerative colitis],mean,0.9418896509698378,0.0117013932666738,5,ulcerative colitis

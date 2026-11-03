@@ -1,0 +1,6 @@
+rna-twin
+Copyright 2026 dbTwin, Inc.
+
+The benchmark code in this repository is licensed under the Apache License,
+Version 2.0 (see LICENSE). The synthetic data on Hugging Face is licensed
+separately under CC BY-NC 4.0 (see hf/LICENSE).

@@ -1,0 +1,7 @@
+target_class,variable,variable_type,metric,metric_value,n_real,n_synthetic
+Crohn's disease,Sample Characteristic[age at diagnosis years],continuous,total_variation_distance,0.045871559633027525,218,218
+Crohn's disease,Sample Characteristic[sex],categorical,total_variation_distance,0.0,218,218
+cntrl,Sample Characteristic[age at diagnosis years],continuous,total_variation_distance,0.21428571428571427,42,42
+cntrl,Sample Characteristic[sex],categorical,total_variation_distance,0.0,42,42
+ulcerative colitis,Sample Characteristic[age at diagnosis years],continuous,total_variation_distance,0.0967741935483871,62,62
+ulcerative colitis,Sample Characteristic[sex],categorical,total_variation_distance,0.0,62,62

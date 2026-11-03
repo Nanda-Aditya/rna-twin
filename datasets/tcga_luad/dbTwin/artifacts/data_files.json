@@ -1,0 +1,30 @@
+{
+  "root": "datasets/tcga_luad/dbTwin",
+  "cohort": "tcga_luad",
+  "release": "syn_tcga_luad.csv",
+  "fold_pattern": "syn_tcga_luad_fold_<1-5>.csv",
+  "release_rows": "510",
+  "clinical_columns": [
+    "clinical_os_months",
+    "clinical_os_status",
+    "clinical_age",
+    "clinical_sex",
+    "clinical_egfr_mut",
+    "clinical_kras_mut",
+    "clinical_alk_mut",
+    "clinical_tp53_mut",
+    "clinical_stk11_mut",
+    "clinical_stage_clean"
+  ],
+  "release_only": [],
+  "fold_only": [],
+  "n_genes": "19,719",
+  "n_ensembl": "16,933",
+  "versioned": false,
+  "ensembl_example": "ENSG00000259429",
+  "n_symbols": "2,786",
+  "symbol_examples": [
+    "TMSL3",
+    "PKM2"
+  ]
+}

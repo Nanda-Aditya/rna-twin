@@ -2,20 +2,25 @@
 """Select elastic-net C values using only each split's training data."""
 
 import argparse
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import StratifiedKFold
-from sklearn.preprocessing import StandardScaler
+
+# Resolve helpers from this repository before editable installations.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from bench_utils.expression import log_cpm, n_ml_features, top_variable_genes
+from bench_utils.ml_wrapper import make_model
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("input_dir", type=Path)
 parser.add_argument("output_dir", type=Path)
-parser.add_argument("--target", required=True)
+parser.add_argument("--ml-target", required=True)
+parser.add_argument("--manifest", type=Path)
 parser.add_argument("--force", action="store_true")
 args = parser.parse_args()
 
@@ -26,11 +31,14 @@ if cache.exists() and not args.force:
 
 C_VALUES = np.logspace(-4, 1, 51)
 L1_RATIO = 0.05
-SPARSITY_BAND = (0.10, 0.40)
+SPARSITY_BAND = (0.20, 0.60)
 
-clinical = pd.read_csv(args.input_dir / "clinical.csv", index_col=0)
-expression = pd.read_csv(args.input_dir / "expression.csv", index_col=0)
-manifest = pd.read_csv(args.input_dir / "split_manifest.csv", dtype={"sample_id": str})
+clinical = pd.read_csv(args.input_dir / "metadata.csv", index_col=0)
+expression = pd.read_csv(args.input_dir / "expression.csv.gz", index_col=0)
+manifest = pd.read_csv(
+    args.manifest or args.input_dir / "split_manifest.csv",
+    dtype={"sample_id": str},
+)
 clinical.index = clinical.index.map(str)
 expression.index = expression.index.map(str)
 real = expression.join(clinical, how="inner")
@@ -42,33 +50,26 @@ for split, rows in manifest.groupby("split", sort=True):
         rows["partition"].str.lower() == "train", "sample_id"
     ]
     trn = real.loc[sample_ids]
-    n_features = max(1, min(270, int(len(trn) * 0.9), len(genes)))
-    n_splits = min(5, trn[args.target].value_counts().min())
+    # Same features as compute_metrics.py: log2(CPM + 1), genes ranked by inner-training variance.
+    x_trn, y_trn = log_cpm(trn[genes]), trn[args.ml_target]
+    n_features = n_ml_features(len(trn), len(genes))
+    n_splits = min(5, y_trn.value_counts().min())
     if n_splits < 2:
         raise ValueError(f"Split {split} has fewer than two samples in a target class")
 
     folds = []
     cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
-    for train_index, valid_index in cv.split(trn, trn[args.target]):
-        inner_trn = trn.iloc[train_index]
-        inner_valid = trn.iloc[valid_index]
-        mad = inner_trn[genes].sub(inner_trn[genes].median()).abs().median()
-        selected_genes = mad.nlargest(n_features).index
-        scaler = StandardScaler()
-        x_train = scaler.fit_transform(np.log1p(inner_trn[selected_genes]))
-        x_valid = scaler.transform(np.log1p(inner_valid[selected_genes]))
-        folds.append((x_train, inner_trn[args.target], x_valid,
-                      inner_valid[args.target]))
+    for train_index, valid_index in cv.split(x_trn, y_trn):
+        selected_genes = top_variable_genes(x_trn.iloc[train_index], n_features)
+        folds.append((x_trn.iloc[train_index][selected_genes], y_trn.iloc[train_index],
+                      x_trn.iloc[valid_index][selected_genes], y_trn.iloc[valid_index]))
 
     def fit_candidate(C):
         aucs, active_fractions = [], []
         for x_train, y_train, x_valid, y_valid in folds:
-            clf = LogisticRegression(
-                penalty="elasticnet", solver="saga", C=C,
-                l1_ratio=L1_RATIO, class_weight="balanced", max_iter=6000,
-                random_state=42,
-            ).fit(x_train, y_train)
-            probabilities = clf.predict_proba(x_valid)
+            model = make_model(C, L1_RATIO).fit(x_train, y_train)
+            clf = model[-1]
+            probabilities = model.predict_proba(x_valid)
             auc = (
                 roc_auc_score(y_valid, probabilities[:, 1])
                 if len(clf.classes_) == 2 else

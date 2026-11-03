@@ -1,0 +1,320 @@
+{
+  "metrics": {
+    "roc_auc_trtr": {
+      "estimate": "0.894 \u00b1 0.032",
+      "value": "0.894",
+      "std": "0.032",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "roc_auc_tstr": {
+      "estimate": "0.893 \u00b1 0.027",
+      "value": "0.893",
+      "std": "0.027",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "coexpression_spearman": {
+      "estimate": "0.965",
+      "value": "0.965",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "umap_mmd": {
+      "estimate": "0.037",
+      "value": "0.037",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "privacy_p5_ratio": {
+      "estimate": "1.056 \u00b1 0.035",
+      "value": "1.056",
+      "std": "0.035",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "shap_pearson": {
+      "estimate": "0.881 \u00b1 0.043",
+      "value": "0.881",
+      "std": "0.043",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "shap_spearman": {
+      "estimate": "0.856 \u00b1 0.033",
+      "value": "0.856",
+      "std": "0.033",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard": {
+      "estimate": "0.112",
+      "value": "0.112",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard_columns_gt_02": {
+      "estimate": "0",
+      "value": "0",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi": {
+      "estimate": "0.066",
+      "value": "0.066",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi_columns_gt_02": {
+      "estimate": "0",
+      "value": "0",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    }
+  },
+  "cohort": {
+    "name": "Sepsis cohort",
+    "ml_target": "Classification",
+    "real_samples": "152",
+    "genes": "27097",
+    "clinical_vars": "4",
+    "splits": "5",
+    "train_samples": "121-122",
+    "test_samples": "30-31",
+    "synthetic_samples": "121-122",
+    "classes": "No-Sepsis, SepsisBSI",
+    "n_genes_de": "27,097",
+    "de_genes_tested": "27,097",
+    "de_genes_reported": "21,677",
+    "de_all_genes": true,
+    "n_genes_aux": "100",
+    "n_genes_secret": "100",
+    "anchor_cols": "Classification, age, sex",
+    "qi_cols": "age, sex",
+    "clinical_secrets": "ethnicity, Classification"
+  },
+  "anchor_cols": [
+    "Classification",
+    "age",
+    "sex"
+  ],
+  "figure_columns": {
+    "/datasets/sepsis/dbTwin/artifacts/figs/de_0.pdf": "Classification",
+    "/datasets/sepsis/dbTwin/artifacts/figs/gene_counts_0.pdf": "Classification"
+  },
+  "de_contrasts": [
+    {
+      "column": "Classification",
+      "categories": [
+        "SepsisBSI",
+        "No-Sepsis"
+      ]
+    }
+  ],
+  "de_results": [
+    {
+      "contrast": "SepsisBSI vs No-Sepsis",
+      "case": "SepsisBSI",
+      "lfc": {
+        "estimate": "0.994",
+        "value": "0.994",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "1.01",
+        "value": "1.01",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "2743",
+        "value": "2743",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "2794",
+          "recovered": "2479",
+          "recovery_percent": "90%",
+          "precision": "89%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "4065",
+          "recovered": "2667",
+          "recovery_percent": "97%",
+          "precision": "66%"
+        }
+      ],
+      "recovery": {
+        "estimate": "97%",
+        "value": "0.972",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      }
+    }
+  ],
+  "shap_results": [
+    {
+      "class": "SepsisBSI",
+      "pearson": {
+        "estimate": "0.881 \u00b1 0.043",
+        "value": "0.881",
+        "std": "0.043",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.856 \u00b1 0.033",
+        "value": "0.856",
+        "std": "0.033",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "7.4/10"
+    }
+  ],
+  "top_secrets": [
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "Classification",
+      "training": "0.91",
+      "control": "0.72",
+      "excess": "0.19"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "XK (gene)",
+      "training": "0.26",
+      "control": "0.09",
+      "excess": "0.18"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "HRH4 (gene)",
+      "training": "0.23",
+      "control": "0.06",
+      "excess": "0.17"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "MYH7 (gene)",
+      "training": "0.20",
+      "control": "0.09",
+      "excess": "0.12"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "ethnicity",
+      "training": "0.79",
+      "control": "0.67",
+      "excess": "0.12"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "Classification",
+      "training": "0.63",
+      "control": "0.50",
+      "excess": "0.13"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "TTTY14 (gene)",
+      "training": "0.50",
+      "control": "0.41",
+      "excess": "0.09"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "MUC5AC (gene)",
+      "training": "0.15",
+      "control": "0.06",
+      "excess": "0.09"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "SLIT3 (gene)",
+      "training": "0.14",
+      "control": "0.06",
+      "excess": "0.09"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "DMTN (gene)",
+      "training": "0.13",
+      "control": "0.06",
+      "excess": "0.07"
+    }
+  ],
+  "provenance": {
+    "date": "2026-11-03",
+    "pipeline": "rna-twin 0.1.0",
+    "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
+  },
+  "data_files": {
+    "root": "datasets/sepsis/dbTwin",
+    "cohort": "sepsis",
+    "release": "syn_sepsis.csv",
+    "fold_pattern": "syn_sepsis_fold_<1-5>.csv",
+    "release_rows": "152",
+    "clinical_columns": [
+      "age",
+      "sex",
+      "ethnicity",
+      "Classification"
+    ],
+    "release_only": [],
+    "fold_only": [],
+    "n_genes": "27,097",
+    "n_ensembl": "27,097",
+    "versioned": true,
+    "ensembl_example": "ENSG00000000003.14",
+    "n_symbols": "0",
+    "symbol_examples": [],
+    "de_files": [
+      "artifacts/de/de_Classification_SepsisBSI_vs_No-Sepsis.csv"
+    ]
+  },
+  "figure_split": "0",
+  "shap_split": "0",
+  "shap_failed_folds": 0,
+  "shap_total_folds": 5,
+  "figures": {
+    "expression_fidelity": "/datasets/sepsis/dbTwin/artifacts/figs/expression_fidelity.pdf",
+    "clinical_fidelity": [
+      {
+        "variable": "age",
+        "path": "/datasets/sepsis/dbTwin/artifacts/figs/clinical_fidelity0.pdf"
+      },
+      {
+        "variable": "sex",
+        "path": "/datasets/sepsis/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
+      }
+    ],
+    "gene_counts": [
+      "/datasets/sepsis/dbTwin/artifacts/figs/gene_counts_0.pdf"
+    ],
+    "differential_expression": [
+      "/datasets/sepsis/dbTwin/artifacts/figs/de_0.pdf"
+    ],
+    "shap": [
+      "/datasets/sepsis/dbTwin/artifacts/figs/SHAP_Synthetic.pdf"
+    ],
+    "privacy": "/datasets/sepsis/dbTwin/artifacts/figs/privacy.pdf",
+    "auc_folds": "/datasets/sepsis/dbTwin/artifacts/figs/auc_folds.pdf",
+    "gene_stats": "/datasets/sepsis/dbTwin/artifacts/figs/gene_stats.pdf"
+  }
+}

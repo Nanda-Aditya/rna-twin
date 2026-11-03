@@ -1,0 +1,13 @@
+target_class,variable,variable_type,metric,metric_value,n_real,n_synthetic
+advanced,clinical_egfr_mut,categorical,total_variation_distance,0.0057239057239057145,110,108
+advanced,clinical_age,continuous,total_variation_distance,0.04616230078769004,106,103
+advanced,clinical_kras_mut,categorical,total_variation_distance,0.0030303030303029943,110,108
+advanced,clinical_sex,categorical,total_variation_distance,0.009764309764309809,110,108
+I,clinical_egfr_mut,categorical,total_variation_distance,0.003636363636363646,275,275
+I,clinical_age,continuous,total_variation_distance,0.04288110108720795,264,262
+I,clinical_kras_mut,categorical,total_variation_distance,0.0,275,275
+I,clinical_sex,categorical,total_variation_distance,0.0036363636363636043,275,275
+II,clinical_egfr_mut,categorical,total_variation_distance,0.015014424337791765,123,124
+II,clinical_age,continuous,total_variation_distance,0.047714000854579136,119,118
+II,clinical_kras_mut,categorical,total_variation_distance,0.0026226068712299766,123,124
+II,clinical_sex,categorical,total_variation_distance,0.00432730133752951,123,124

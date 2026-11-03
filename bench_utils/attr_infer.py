@@ -13,46 +13,35 @@ from tempfile import TemporaryDirectory
 CONFIDENCE = 0.95
 N_JOBS = -4
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON_ENV = "RNA_SYN_BENCH_ANONYMETER_PYTHON"
-RUNTIME_ENV = "RNA_SYN_BENCH_ANONYMETER_RUNTIME"
+RUNTIME_ENV = "RNA_TWIN_ANONYMETER_RUNTIME"
 
 
 def in_anonymeter_runtime():
+    """Whether this process is the Anonymeter worker started by `compute_secret_risk`."""
     return os.environ.get(RUNTIME_ENV) == "1"
 
 
 def anonymeter_python():
-    configured = os.environ.get(PYTHON_ENV)
-    python = (
-        Path(configured).expanduser()
-        if configured else ROOT / ".venv_anon" /
-        ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    ).resolve()
+    """Path of the isolated Anonymeter venv's Python (NumPy 1.x), made by setup_anonymeter.py."""
+    python = (ROOT / ".venv_anonymeter" /
+              ("Scripts/python.exe" if os.name == "nt" else "bin/python")).resolve()
     if not python.is_file():
         raise FileNotFoundError(
-            f"Anonymeter Python was not found at {python}. Create the isolated "
-            f"environment from {ROOT / 'requirements_anon.txt'} "
-            f"or set {PYTHON_ENV}."
+            f"Anonymeter Python was not found at {python}. Run "
+            "'uv run --python 3.12 python scripts/setup_anonymeter.py' "
+            "from the rna-twin repo root."
         )
     return python
 
+
 def _runtime_environment():
+    """Current environment, marked as the Anonymeter runtime, with this repository importable."""
     env = os.environ.copy()
     env[RUNTIME_ENV] = "1"
     env["PYTHONPATH"] = os.pathsep.join(
         part for part in (str(ROOT), env.get("PYTHONPATH")) if part
     )
     return env
-
-
-def run_in_anonymeter_runtime(script, args=(), cwd=None):
-    """Run a Python script once in the isolated Anonymeter environment."""
-    return subprocess.run(
-        [str(anonymeter_python()), str(script), *map(str, args)],
-        cwd=cwd,
-        env=_runtime_environment(),
-        check=False,
-    ).returncode
 
 
 def compute_secret_risk(
@@ -64,7 +53,15 @@ def compute_secret_risk(
     secret,
     seed,
 ):
-    """Compute one risk directly or delegate it to the isolated runtime."""
+    """Anonymeter attribute-inference risk for one `secret` column.
+
+    The attacker knows the auxiliary columns (`genes` + clinical `auxiliary`) of real records
+    and uses `df_syn` to guess `secret`; success on training records is compared with held-out
+    `df_tst` controls (outputs in `_compute_secret_risk`). The `genes` columns must already be
+    log2(CPM + 1) (`expression.log_cpm` over all genes); a gene secret keeps its released
+    scale. Runs in-process inside the Anonymeter runtime, otherwise in that venv through a
+    pickled subprocess call.
+    """
     if in_anonymeter_runtime():
         return _compute_secret_risk(
             df_trn, df_syn, df_tst, genes, auxiliary, secret, seed
@@ -80,7 +77,9 @@ def compute_secret_risk(
         "secret": secret,
         "seed": seed,
     }
-    with TemporaryDirectory(prefix="rna_syn_bench_attr_") as temp:
+    # Windows can briefly lock the fresh pickles (e.g. antivirus scans); a leftover temporary
+    # file must not discard a finished attack.
+    with TemporaryDirectory(prefix="rna_twin_attr_", ignore_cleanup_errors=True) as temp:
         input_path = Path(temp) / "input.pkl"
         output_path = Path(temp) / "output.pkl"
         with input_path.open("wb") as handle:
@@ -124,6 +123,13 @@ def _compute_secret_risk(
     secret,
     seed,
 ):
+    """Run Anonymeter's InferenceEvaluator with one attack per test record.
+
+    Gene columns are z-scored with training statistics; the secret is a regression
+    target when numeric with more than two values. Returns training, baseline and control
+    attack success rates with errors, and `inference_risk` = (training - control) /
+    (1 - control) with its confidence interval.
+    """
     import numpy as np
     import pandas as pd
     from anonymeter.evaluators import InferenceEvaluator
@@ -136,9 +142,9 @@ def _compute_secret_risk(
 
     clinical = [*auxiliary, secret]
     if genes:
-        E_trn, estats = _prep_expression(df_trn, genes)
-        E_syn, _ = _prep_expression(df_syn, genes, fit_stats=estats)
-        E_tst, _ = _prep_expression(df_tst, genes, fit_stats=estats)
+        E_trn, estats = _prep_expression(df_trn[genes])
+        E_syn, _ = _prep_expression(df_syn[genes], fit_stats=estats)
+        E_tst, _ = _prep_expression(df_tst[genes], fit_stats=estats)
         ori = pd.concat(
             [pd.DataFrame(E_trn, index=df_trn.index, columns=genes), df_trn[clinical]],
             axis=1,
@@ -199,6 +205,11 @@ def _compute_secret_risk(
 
 
 def _run_worker(input_path, output_path):
+    """Worker entry point: unpickle `compute_secret_risk` arguments, pickle the result.
+
+    Pickles from the NumPy 2 benchmark environment reference `numpy._core`, which is mapped to
+    the worker's NumPy 1 `numpy.core`.
+    """
     import numpy as np
 
     if np.__version__.split(".", 1)[0] != "1":

@@ -1,80 +1,32 @@
-import numpy as np
+"""Differential expression with PyDESeq2."""
+
+from joblib import parallel_backend
 from pydeseq2.dds import DeseqDataSet
 from pydeseq2.ds import DeseqStats
-from joblib import parallel_backend
 
 
-def de_computes(G, trgt, contrast=None):
-    """Compute differential expression for a single dataframe.
+def gexp_de(frame, column, contrast):
+    """DESeq2 Wald test of `contrast` = (case, reference) in `column` of samples x genes counts.
 
-    Args:
-        G: DataFrame with gene expression + trgt column
-        trgt: Target column name for DE contrast
-
-    Returns:
-        Tuple of (genes_min, genes_mod, lfc_all, padj_all, genes_all)
+    `frame` holds the gene count columns and `column`. Samples with missing `column` are
+    dropped, counts are rounded to integers and the design is `~ column`. Cook's-distance
+    outliers are replaced and refit as in R DESeq2 (`refit_cooks=True`, for levels with at
+    least 7 samples); genes still flagged, and genes removed by independent filtering, have
+    padj NaN. Returns one row per gene: `log2FoldChange` (case relative to reference, not
+    shrunk) and `padj` (Benjamini-Hochberg adjusted Wald p-value).
     """
-    unique_vals = sorted(G[trgt].unique())  # sorting is important for consistency
-    if contrast is None:
-        if len(unique_vals) != 2:
-            raise ValueError("Explicit contrast required for multiclass DE")
-        contrast = (unique_vals[1], unique_vals[0])
-    available = {str(value) for value in unique_vals}
-    if any(str(label) not in available for label in contrast):
-        raise ValueError(f"Contrast {contrast} is absent from target {trgt}")
-    contrast_class = [
-        trgt,
-        str(contrast[0]),
-        str(contrast[1]),
-    ]
-    gexp= G.drop(columns=trgt).round().astype(int)
-
-    genes_min, genes_mod, res = gexp_de(
-        gexp, G[[trgt]], trgt, contrast_class.copy() )
-
-    genes_min = sorted(genes_min)
-    genes_mod = sorted(genes_mod)
-    genes_all = sorted(res.index)
-
-    lfc_all = res.loc[genes_all, "log2FoldChange"].values if genes_all else np.array([])
-    padj_all = res.loc[genes_all, "padj"].values if genes_all else np.array([])
-
-    return {"genes_min":genes_min,
-            "genes_mod":genes_mod,
-            "lfc_all":lfc_all,
-            "padj_all":padj_all,
-            "genes_all":genes_all}
-
-
-def gexp_de(G, meta, trgt, contrast_class, padj=0.05, lfc_t=1, bmt=10):
-    # G is a r x c gene_exp
-    # meta is metdata datafrmae
-    # trgt is a metadata column with TARGET
-    # contrast_class are uniquee values in trgt where the diff expression would be done
-    meta=meta.copy()
-    meta[trgt] = meta[trgt].astype(str).astype("category")
-
-    dds = DeseqDataSet(counts=G, metadata=meta, design=f"~ {trgt}", refit_cooks=False)
-    import time
-    tic= time.time()
-    with parallel_backend('loky', n_jobs=6):
+    frame = frame.loc[frame[column].notna()]
+    labels = frame[column].astype(str)
+    case, reference = map(str, contrast)
+    if not {case, reference} <= set(labels):
+        raise ValueError(f"Contrast {contrast} is absent from {column}")
+    # A fixed factor name keeps the design formula valid for any column name.
+    dds = DeseqDataSet(
+        counts=frame.drop(columns=column).round().astype(int),
+        metadata=labels.astype("category").to_frame("condition"),
+        design="~ condition", refit_cooks=True)
+    with parallel_backend("loky", n_jobs=6):
         dds.deseq2()
-    print("time for deseq2 (loky backend)",time.time()-tic)
-
-    stats = DeseqStats(dds, contrast=contrast_class)
+    stats = DeseqStats(dds, contrast=["condition", case, reference], quiet=True)
     stats.summary()
-    res1 = stats.results_df
-
-    # Compute DEG sets (minimum and moderate stringency)
-    df = res1.dropna(subset=["padj"]).copy()
-    min_mask = df["padj"] < padj
-    genes_min = set(df.index[min_mask])
-
-    mod_mask = min_mask
-    if lfc_t is not None:
-        mod_mask = mod_mask & (df["log2FoldChange"].abs() >= lfc_t)
-    if bmt is not None:
-        mod_mask = mod_mask & (df["baseMean"] >= bmt)
-    genes_mod = set(df.index[mod_mask])
-
-    return genes_min, genes_mod, res1
+    return stats.results_df[["log2FoldChange", "padj"]]

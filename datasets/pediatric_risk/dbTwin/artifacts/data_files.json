@@ -1,0 +1,21 @@
+{
+  "root": "datasets/pediatric_risk/dbTwin",
+  "cohort": "pediatric_risk",
+  "release": "syn_pediatric_risk.csv",
+  "fold_pattern": "syn_pediatric_risk_fold_<1-5>.csv",
+  "release_rows": "322",
+  "clinical_columns": [
+    "sample_disease",
+    "Sample Characteristic[sex]",
+    "Sample Characteristic[age at diagnosis years]",
+    "Sample Characteristic[organism part]"
+  ],
+  "release_only": [],
+  "fold_only": [],
+  "n_genes": "43,790",
+  "n_ensembl": "43,790",
+  "versioned": false,
+  "ensembl_example": "ENSG00000000003",
+  "n_symbols": "0",
+  "symbol_examples": []
+}

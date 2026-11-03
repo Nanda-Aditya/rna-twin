@@ -1,0 +1,18 @@
+ml_target: sample_disease
+de_contrasts:
+- column: sample_disease
+  categories:
+  - Crohn's disease
+  - cntrl
+- column: sample_disease
+  categories:
+  - ulcerative colitis
+  - cntrl
+anchor_cols: sample_disease,Sample Characteristic[age at diagnosis years],Sample Characteristic[sex]
+qi_cols:
+- Sample Characteristic[age at diagnosis years]
+- Sample Characteristic[sex]
+n_genes_aux: 100
+n_genes_secret: 100
+n_genes_de: -1
+cohort_name: RISK pediatric IBD cohort (GSE57945)
