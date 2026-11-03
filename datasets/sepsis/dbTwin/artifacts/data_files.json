@@ -1,0 +1,21 @@
+{
+  "root": "datasets/sepsis/dbTwin",
+  "cohort": "sepsis",
+  "release": "syn_sepsis.csv",
+  "fold_pattern": "syn_sepsis_fold_<1-5>.csv",
+  "release_rows": "152",
+  "clinical_columns": [
+    "age",
+    "sex",
+    "ethnicity",
+    "Classification"
+  ],
+  "release_only": [],
+  "fold_only": [],
+  "n_genes": "27,097",
+  "n_ensembl": "27,097",
+  "versioned": true,
+  "ensembl_example": "ENSG00000000003.14",
+  "n_symbols": "0",
+  "symbol_examples": []
+}

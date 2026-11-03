@@ -1,0 +1,28 @@
+[project]
+name = "rna-twin"
+version = "0.1.0"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = [
+    "huggingface-hub>=1.26.0",
+    "PyYAML>=6.0",
+    "typst==0.15.0",
+    "joblib==1.4.2",
+    "matplotlib>=3.11.2",
+    "numpy==2.2.0",
+    "pandas==2.3.1",
+    "pydeseq2==0.5.3",
+    "scikit-learn>=1.6",
+    "scipy==1.15.1",
+    "shap>=0.52.0",
+    "umap-learn==0.5.9.post2",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "bench_utils"
+module-root = ""

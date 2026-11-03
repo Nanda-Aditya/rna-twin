@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this benchmark or the rna-twin data, please cite this repository."
+title: "rna-twin: synthetic bulk RNA-seq cohorts and benchmark"
+type: software
+authors:
+  - family-names: Nanda
+    given-names: Aditya
+  - family-names: Saha
+    given-names: Somdutta
+repository-code: "https://github.com/Nanda-Aditya/rna-twin"
+url: "https://huggingface.co/datasets/NandaAditya/rna-twin"
+license: Apache-2.0

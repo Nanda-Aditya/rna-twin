@@ -1,0 +1,22 @@
+ml_target: clinical_stage_clean
+de_contrasts:
+- column: clinical_kras_mut
+  categories:
+  - 0
+  - 1
+- column: clinical_egfr_mut
+  categories:
+  - 0
+  - 1
+- column: clinical_stk11_mut
+  categories:
+  - 0
+  - 1
+anchor_cols: clinical_egfr_mut,clinical_age,clinical_stage_clean,clinical_kras_mut,clinical_sex
+qi_cols:
+- clinical_age
+- clinical_sex
+n_genes_aux: 100
+n_genes_secret: 100
+n_genes_de: -1
+cohort_name: TCGA lung adenocarcinoma (TCGA-LUAD)

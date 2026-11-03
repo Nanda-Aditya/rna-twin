@@ -1,0 +1,14 @@
+ml_target: Classification
+de_contrasts:
+- column: Classification
+  categories:
+  - SepsisBSI
+  - No-Sepsis
+anchor_cols: Classification,age,sex
+qi_cols:
+- age
+- sex
+n_genes_aux: 100
+n_genes_secret: 100
+n_genes_de: -1
+cohort_name: Sepsis cohort

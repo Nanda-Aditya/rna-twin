@@ -1,4 +1,4 @@
-"""Compute UMAP and gene coexpression benchmark artifacts."""
+"""Compute UMAP and gene coexpression benchmark artifacts from log2(CPM + 1) expression."""
 
 from __future__ import annotations
 
@@ -7,28 +7,19 @@ import pandas as pd
 from scipy.cluster.hierarchy import leaves_list, linkage
 from scipy.spatial.distance import squareform
 from scipy.stats import spearmanr
+from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import rbf_kernel
+
+from bench_utils.expression import top_variable_genes
 
 
 N_COEXPRESSION_GENES = 500
+N_PCS = 100
 UMAP_RANDOM_STATE = 42
 
 
-def _median_absolute_deviation(values: np.ndarray) -> np.ndarray:
-    medians = np.median(values, axis=0)
-    return np.median(np.abs(values - medians), axis=0)
-
-
-def _finite_values(frame: pd.DataFrame, columns: np.ndarray) -> np.ndarray:
-    return np.nan_to_num(
-        frame.loc[:, columns].to_numpy(dtype=float),
-        nan=0.0,
-        posinf=0.0,
-        neginf=0.0,
-    )
-
-
 def _mmd(real_embedding: np.ndarray, synthetic_embedding: np.ndarray) -> float:
+    """Biased (V-statistic) RBF-kernel MMD, sqrt(|MMD^2|), with gamma = 1 / n_features."""
     squared = (
         rbf_kernel(real_embedding).mean()
         + rbf_kernel(synthetic_embedding).mean()
@@ -38,91 +29,63 @@ def _mmd(real_embedding: np.ndarray, synthetic_embedding: np.ndarray) -> float:
 
 
 def compute_umap_artifacts(
-    df_trn: pd.DataFrame,
-    synthetic_frames: dict[str, pd.DataFrame],
-    gexp_cols: np.ndarray,
-    target: str,
-) -> tuple[dict[str, dict[str, np.ndarray]], dict[str, float]]:
+    x_real: pd.DataFrame, x_syn: pd.DataFrame, n_components: int = 2,
+) -> tuple[np.ndarray, np.ndarray, float]:
+    """Embed real and synthetic expression in one joint UMAP and score their overlap.
+
+    `x_real` and `x_syn` are samples x genes log2(CPM + 1) frames (the full cohorts in
+    compute_metrics.py); missing values count as 0. Genes with real variance above its 40th
+    percentile are reduced, jointly and without scaling, to `N_PCS` principal components, which
+    one UMAP fit (15 neighbors, minimum distance 0.1, Euclidean distance) embeds in
+    `n_components` dimensions. Returns the real and synthetic embeddings and their `_mmd`.
+    """
     import umap
 
-    real_values = _finite_values(df_trn, gexp_cols)
-    gene_mad = _median_absolute_deviation(real_values)
-    selected = np.flatnonzero(gene_mad > np.percentile(gene_mad, 40))
-    if selected.size == 0:
-        selected = np.argsort(-gene_mad)[: min(2, len(gexp_cols))]
-    selected_genes = gexp_cols[selected]
-
-    matrices = {"real": _finite_values(df_trn, selected_genes)}
-    matrices.update(
-        {
-            suffix: _finite_values(frame, selected_genes)
-            for suffix, frame in synthetic_frames.items()
-        }
-    )
-    model_order = list(synthetic_frames)
-    combined = np.vstack([matrices["real"], *(matrices[key] for key in model_order)])
+    variance = x_real.var()
+    genes = variance.index[variance > variance.quantile(0.4)]
+    combined = pd.concat([x_real[genes], x_syn[genes]]).fillna(0).to_numpy(dtype=float)
+    pcs = PCA(min(N_PCS, *combined.shape), random_state=UMAP_RANDOM_STATE).fit_transform(combined)
     embedding = umap.UMAP(
-        n_components=3,
+        n_components=n_components,
         n_neighbors=15,
         min_dist=0.1,
         metric="euclidean",
         n_jobs=1,
         random_state=UMAP_RANDOM_STATE,
-    ).fit_transform(combined)[:, :2]
-
-    offsets = np.cumsum([0, *(len(matrices[key]) for key in ["real", *model_order])])
-    real_embedding = embedding[offsets[0] : offsets[1]]
-    artifacts: dict[str, dict[str, np.ndarray]] = {}
-    mmd_values: dict[str, float] = {}
-    for index, suffix in enumerate(model_order, start=1):
-        synthetic_embedding = embedding[offsets[index] : offsets[index + 1]]
-        artifacts[suffix] = {
-            "real": real_embedding.astype(np.float32),
-            "synthetic": synthetic_embedding.astype(np.float32),
-            "real_target": df_trn[target].to_numpy(),
-            "synthetic_target": synthetic_frames[suffix][target].to_numpy(),
-        }
-        mmd_values[suffix] = _mmd(real_embedding, synthetic_embedding)
-    return artifacts, mmd_values
+    ).fit_transform(pcs)
+    real, synthetic = embedding[:len(x_real)], embedding[len(x_real):]
+    return real.astype(np.float32), synthetic.astype(np.float32), _mmd(real, synthetic)
 
 
-def _correlation_matrix(frame: pd.DataFrame, genes: np.ndarray) -> np.ndarray:
-    values = _finite_values(frame, genes)
-    # Counts are non-negative; clipping makes log1p well-defined for continuous
-    # baselines that can generate negative values.
-    values = np.log1p(np.clip(values, 0.0, None))
-    matrix = np.corrcoef(values.T)
+def _correlation_matrix(expression: pd.DataFrame) -> np.ndarray:
+    """Gene-gene Pearson correlations (missing values as 0); undefined entries become 0."""
+    matrix = np.corrcoef(expression.fillna(0).to_numpy(dtype=float).T)
     return np.nan_to_num(matrix, nan=0.0, posinf=0.0, neginf=0.0)
 
 
 def compute_coexpression_artifacts(
-    df_trn: pd.DataFrame,
-    synthetic_frames: dict[str, pd.DataFrame],
-    gexp_cols: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray, dict[str, np.ndarray], dict[str, float]]:
-    real_values = _finite_values(df_trn, gexp_cols)
-    gene_mad = _median_absolute_deviation(real_values)
-    top_indices = np.argsort(-gene_mad)[:N_COEXPRESSION_GENES]
-    top_genes = gexp_cols[top_indices]
+    x_real: pd.DataFrame, x_syn: pd.DataFrame,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, float]:
+    """Compare gene-gene co-expression structure of real and synthetic data.
 
-    real_matrix = _correlation_matrix(df_trn, top_genes)
+    Takes the top `N_COEXPRESSION_GENES` genes by real variance of the log2(CPM + 1) frames
+    `x_real` and `x_syn`, builds Pearson correlation matrices, and orders genes
+    (`ordered_genes`) by average-linkage clustering of the real matrix. Returns the ordered
+    genes, the real and synthetic matrices in that order, and the Spearman rho between their
+    upper triangles.
+    """
+    top_genes = top_variable_genes(x_real, N_COEXPRESSION_GENES)
+    real_matrix = _correlation_matrix(x_real[top_genes])
     distance = np.clip(1.0 - real_matrix, 0.0, 2.0)
     order = leaves_list(linkage(squareform(distance, checks=False), method="average"))
     ordered_genes = top_genes[order]
     real_matrix = real_matrix[np.ix_(order, order)]
+    synthetic_matrix = _correlation_matrix(x_syn[ordered_genes])
     upper = np.triu_indices(len(ordered_genes), k=1)
-
-    matrices: dict[str, np.ndarray] = {}
-    correlations: dict[str, float] = {}
-    for suffix, frame in synthetic_frames.items():
-        synthetic_matrix = _correlation_matrix(frame, ordered_genes)
-        matrices[suffix] = synthetic_matrix.astype(np.float32)
-        correlations[suffix] = float(
-            spearmanr(real_matrix[upper], synthetic_matrix[upper]).statistic
-        )
+    rho = float(spearmanr(real_matrix[upper], synthetic_matrix[upper]).statistic)
     return (
-        ordered_genes,
+        ordered_genes.to_numpy(),
         real_matrix.astype(np.float32),
-        matrices,
-        correlations,
+        synthetic_matrix.astype(np.float32),
+        rho,
     )

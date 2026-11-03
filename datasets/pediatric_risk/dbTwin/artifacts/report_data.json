@@ -1,0 +1,418 @@
+{
+  "metrics": {
+    "roc_auc_trtr": {
+      "estimate": "0.880 \u00b1 0.032",
+      "value": "0.880",
+      "std": "0.032",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "roc_auc_tstr": {
+      "estimate": "0.878 \u00b1 0.035",
+      "value": "0.878",
+      "std": "0.035",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "coexpression_spearman": {
+      "estimate": "0.996",
+      "value": "0.996",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "umap_mmd": {
+      "estimate": "0.022",
+      "value": "0.022",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "privacy_p5_ratio": {
+      "estimate": "0.916 \u00b1 0.011",
+      "value": "0.916",
+      "std": "0.011",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "shap_pearson": {
+      "estimate": "0.949 \u00b1 0.012",
+      "value": "0.949",
+      "std": "0.012",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "shap_spearman": {
+      "estimate": "0.904 \u00b1 0.025",
+      "value": "0.904",
+      "std": "0.025",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard": {
+      "estimate": "0.094",
+      "value": "0.094",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard_columns_gt_02": {
+      "estimate": "1",
+      "value": "1",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi": {
+      "estimate": "0.029",
+      "value": "0.029",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi_columns_gt_02": {
+      "estimate": "0",
+      "value": "0",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    }
+  },
+  "cohort": {
+    "name": "RISK pediatric IBD cohort (GSE57945)",
+    "ml_target": "sample_disease",
+    "real_samples": "322",
+    "genes": "43790",
+    "clinical_vars": "4",
+    "splits": "5",
+    "train_samples": "257-258",
+    "test_samples": "64-65",
+    "synthetic_samples": "257-258",
+    "classes": "Crohn's disease, cntrl, ulcerative colitis",
+    "n_genes_de": "43,790",
+    "de_genes_tested": "43,790",
+    "de_genes_reported": "35,032",
+    "de_all_genes": true,
+    "n_genes_aux": "100",
+    "n_genes_secret": "100",
+    "anchor_cols": "sample_disease, Sample Characteristic[age at diagnosis years], Sample Characteristic[sex]",
+    "qi_cols": "Sample Characteristic[age at diagnosis years], Sample Characteristic[sex]",
+    "clinical_secrets": "sample_disease, Sample Characteristic[organism part]"
+  },
+  "anchor_cols": [
+    "sample_disease",
+    "Sample Characteristic[age at diagnosis years]",
+    "Sample Characteristic[sex]"
+  ],
+  "figure_columns": {
+    "/datasets/pediatric_risk/dbTwin/artifacts/figs/de_0.pdf": "sample_disease",
+    "/datasets/pediatric_risk/dbTwin/artifacts/figs/de_1.pdf": "sample_disease",
+    "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_0.pdf": "sample_disease",
+    "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_1.pdf": "sample_disease"
+  },
+  "de_contrasts": [
+    {
+      "column": "sample_disease",
+      "categories": [
+        "Crohn's disease",
+        "cntrl"
+      ]
+    },
+    {
+      "column": "sample_disease",
+      "categories": [
+        "ulcerative colitis",
+        "cntrl"
+      ]
+    }
+  ],
+  "de_results": [
+    {
+      "contrast": "Crohn's disease vs cntrl",
+      "case": "Crohn's disease",
+      "lfc": {
+        "estimate": "0.993",
+        "value": "0.993",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "1.00",
+        "value": "1.00",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "5641",
+        "value": "5641",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "5700",
+          "recovered": "5124",
+          "recovery_percent": "91%",
+          "precision": "90%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "7218",
+          "recovered": "5420",
+          "recovery_percent": "96%",
+          "precision": "75%"
+        }
+      ],
+      "recovery": {
+        "estimate": "96%",
+        "value": "0.961",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      }
+    },
+    {
+      "contrast": "ulcerative colitis vs cntrl",
+      "case": "ulcerative colitis",
+      "lfc": {
+        "estimate": "0.980",
+        "value": "0.980",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "0.95",
+        "value": "0.95",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "1169",
+        "value": "1169",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "1120",
+          "recovered": "841",
+          "recovery_percent": "72%",
+          "precision": "75%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "1473",
+          "recovered": "955",
+          "recovery_percent": "82%",
+          "precision": "65%"
+        }
+      ],
+      "recovery": {
+        "estimate": "82%",
+        "value": "0.817",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      }
+    }
+  ],
+  "shap_results": [
+    {
+      "class": "Crohn's disease",
+      "pearson": {
+        "estimate": "0.944 \u00b1 0.013",
+        "value": "0.944",
+        "std": "0.013",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.886 \u00b1 0.035",
+        "value": "0.886",
+        "std": "0.035",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "8.6/10"
+    },
+    {
+      "class": "cntrl",
+      "pearson": {
+        "estimate": "0.927 \u00b1 0.020",
+        "value": "0.927",
+        "std": "0.020",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.883 \u00b1 0.027",
+        "value": "0.883",
+        "std": "0.027",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "8.0/10"
+    },
+    {
+      "class": "ulcerative colitis",
+      "pearson": {
+        "estimate": "0.975 \u00b1 0.005",
+        "value": "0.975",
+        "std": "0.005",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.942 \u00b1 0.012",
+        "value": "0.942",
+        "std": "0.012",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "8.6/10"
+    }
+  ],
+  "top_secrets": [
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "sample_disease",
+      "training": "0.91",
+      "control": "0.63",
+      "excess": "0.28"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "EEF1GP1 (gene)",
+      "training": "0.18",
+      "control": "0.07",
+      "excess": "0.10"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "SLC15A1 (gene)",
+      "training": "0.17",
+      "control": "0.07",
+      "excess": "0.10"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "BPIFB1 (gene)",
+      "training": "0.21",
+      "control": "0.11",
+      "excess": "0.10"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "FCRLA (gene)",
+      "training": "0.14",
+      "control": "0.05",
+      "excess": "0.09"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "sample_disease",
+      "training": "0.62",
+      "control": "0.50",
+      "excess": "0.11"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "CXCL6 (gene)",
+      "training": "0.07",
+      "control": "0.03",
+      "excess": "0.04"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "RPS4XP22 (gene)",
+      "training": "0.09",
+      "control": "0.05",
+      "excess": "0.04"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "AQP8 (gene)",
+      "training": "0.25",
+      "control": "0.21",
+      "excess": "0.03"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "IL6 (gene)",
+      "training": "0.06",
+      "control": "0.03",
+      "excess": "0.03"
+    }
+  ],
+  "provenance": {
+    "date": "2026-11-03",
+    "pipeline": "rna-twin 0.1.0",
+    "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
+  },
+  "data_files": {
+    "root": "datasets/pediatric_risk/dbTwin",
+    "cohort": "pediatric_risk",
+    "release": "syn_pediatric_risk.csv",
+    "fold_pattern": "syn_pediatric_risk_fold_<1-5>.csv",
+    "release_rows": "322",
+    "clinical_columns": [
+      "sample_disease",
+      "Sample Characteristic[sex]",
+      "Sample Characteristic[age at diagnosis years]",
+      "Sample Characteristic[organism part]"
+    ],
+    "release_only": [],
+    "fold_only": [],
+    "n_genes": "43,790",
+    "n_ensembl": "43,790",
+    "versioned": false,
+    "ensembl_example": "ENSG00000000003",
+    "n_symbols": "0",
+    "symbol_examples": [],
+    "de_files": [
+      "artifacts/de/de_sample_disease_Crohn_s_disease_vs_cntrl.csv",
+      "artifacts/de/de_sample_disease_ulcerative_colitis_vs_cntrl.csv"
+    ]
+  },
+  "figure_split": "0",
+  "shap_split": "0",
+  "shap_failed_folds": 0,
+  "shap_total_folds": 5,
+  "figures": {
+    "expression_fidelity": "/datasets/pediatric_risk/dbTwin/artifacts/figs/expression_fidelity.pdf",
+    "clinical_fidelity": [
+      {
+        "variable": "Sample Characteristic[age at diagnosis years]",
+        "path": "/datasets/pediatric_risk/dbTwin/artifacts/figs/clinical_fidelity0.pdf"
+      },
+      {
+        "variable": "Sample Characteristic[sex]",
+        "path": "/datasets/pediatric_risk/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
+      }
+    ],
+    "gene_counts": [
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_0.pdf",
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_1.pdf"
+    ],
+    "differential_expression": [
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/de_0.pdf",
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/de_1.pdf"
+    ],
+    "shap": [
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/SHAP_Synthetic_0.pdf",
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/SHAP_Synthetic_1.pdf",
+      "/datasets/pediatric_risk/dbTwin/artifacts/figs/SHAP_Synthetic_2.pdf"
+    ],
+    "privacy": "/datasets/pediatric_risk/dbTwin/artifacts/figs/privacy.pdf",
+    "auc_folds": "/datasets/pediatric_risk/dbTwin/artifacts/figs/auc_folds.pdf",
+    "gene_stats": "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_stats.pdf"
+  }
+}

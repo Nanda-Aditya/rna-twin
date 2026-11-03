@@ -1,0 +1,489 @@
+{
+  "metrics": {
+    "roc_auc_trtr": {
+      "estimate": "0.573 \u00b1 0.036",
+      "value": "0.573",
+      "std": "0.036",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "roc_auc_tstr": {
+      "estimate": "0.573 \u00b1 0.044",
+      "value": "0.573",
+      "std": "0.044",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "coexpression_spearman": {
+      "estimate": "0.940",
+      "value": "0.940",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "umap_mmd": {
+      "estimate": "0.020",
+      "value": "0.020",
+      "std": "0.000",
+      "splits": "1",
+      "status": "Pass"
+    },
+    "privacy_p5_ratio": {
+      "estimate": "1.047 \u00b1 0.012",
+      "value": "1.047",
+      "std": "0.012",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "shap_pearson": {
+      "estimate": "0.828 \u00b1 0.056",
+      "value": "0.828",
+      "std": "0.056",
+      "splits": "5",
+      "status": "Pass"
+    },
+    "shap_spearman": {
+      "estimate": "0.756 \u00b1 0.047",
+      "value": "0.756",
+      "std": "0.047",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard": {
+      "estimate": "0.143",
+      "value": "0.143",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_standard_columns_gt_02": {
+      "estimate": "3",
+      "value": "3",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi": {
+      "estimate": "0.028",
+      "value": "0.028",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    },
+    "attribute_inference_clinical_qi_columns_gt_02": {
+      "estimate": "0",
+      "value": "0",
+      "std": "N/A",
+      "splits": "5",
+      "status": "N/A"
+    }
+  },
+  "cohort": {
+    "name": "TCGA lung adenocarcinoma (TCGA-LUAD)",
+    "ml_target": "clinical_stage_clean",
+    "real_samples": "510",
+    "genes": "19719",
+    "clinical_vars": "10",
+    "splits": "5",
+    "train_samples": "406-407",
+    "test_samples": "101-102",
+    "synthetic_samples": "406-407",
+    "classes": "advanced, I, II",
+    "n_genes_de": "19,719",
+    "de_genes_tested": "19,719",
+    "de_genes_reported": "15,775",
+    "de_all_genes": true,
+    "n_genes_aux": "100",
+    "n_genes_secret": "100",
+    "anchor_cols": "clinical_egfr_mut, clinical_age, clinical_stage_clean, clinical_kras_mut, clinical_sex",
+    "qi_cols": "clinical_age, clinical_sex",
+    "clinical_secrets": "clinical_os_months, clinical_os_status, clinical_egfr_mut, clinical_kras_mut, clinical_alk_mut, clinical_tp53_mut, clinical_stk11_mut, clinical_stage_clean"
+  },
+  "anchor_cols": [
+    "clinical_egfr_mut",
+    "clinical_age",
+    "clinical_stage_clean",
+    "clinical_kras_mut",
+    "clinical_sex"
+  ],
+  "figure_columns": {
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/de_0.pdf": "clinical_kras_mut",
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/de_1.pdf": "clinical_egfr_mut",
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/de_2.pdf": "clinical_stk11_mut",
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_0.pdf": "clinical_kras_mut",
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_1.pdf": "clinical_egfr_mut",
+    "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_2.pdf": "clinical_stk11_mut"
+  },
+  "de_contrasts": [
+    {
+      "column": "clinical_kras_mut",
+      "categories": [
+        "0",
+        "1"
+      ]
+    },
+    {
+      "column": "clinical_egfr_mut",
+      "categories": [
+        "0",
+        "1"
+      ]
+    },
+    {
+      "column": "clinical_stk11_mut",
+      "categories": [
+        "0",
+        "1"
+      ]
+    }
+  ],
+  "de_results": [
+    {
+      "contrast": "clinical_kras_mut: 0 vs 1",
+      "case": "0",
+      "lfc": {
+        "estimate": "0.961",
+        "value": "0.961",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "0.94",
+        "value": "0.94",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "1121",
+        "value": "1121",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "1125",
+          "recovered": "951",
+          "recovery_percent": "85%",
+          "precision": "85%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "1632",
+          "recovered": "1035",
+          "recovery_percent": "92%",
+          "precision": "63%"
+        }
+      ],
+      "recovery": {
+        "estimate": "92%",
+        "value": "0.923",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      }
+    },
+    {
+      "contrast": "clinical_egfr_mut: 0 vs 1",
+      "case": "0",
+      "lfc": {
+        "estimate": "0.970",
+        "value": "0.970",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "0.92",
+        "value": "0.92",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "1369",
+        "value": "1369",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "1397",
+          "recovered": "1186",
+          "recovery_percent": "87%",
+          "precision": "85%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "1990",
+          "recovered": "1267",
+          "recovery_percent": "93%",
+          "precision": "64%"
+        }
+      ],
+      "recovery": {
+        "estimate": "93%",
+        "value": "0.925",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      }
+    },
+    {
+      "contrast": "clinical_stk11_mut: 0 vs 1",
+      "case": "0",
+      "lfc": {
+        "estimate": "0.883",
+        "value": "0.883",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Pass"
+      },
+      "slope": {
+        "estimate": "0.70",
+        "value": "0.70",
+        "std": "0.00",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "real_de": {
+        "estimate": "2586",
+        "value": "2586",
+        "std": "0",
+        "splits": "1",
+        "status": "N/A"
+      },
+      "synthetic_thresholds": [
+        {
+          "threshold": "0.05",
+          "total": "1873",
+          "recovered": "1519",
+          "recovery_percent": "59%",
+          "precision": "81%"
+        },
+        {
+          "threshold": "0.075",
+          "total": "2471",
+          "recovered": "1786",
+          "recovery_percent": "69%",
+          "precision": "72%"
+        }
+      ],
+      "recovery": {
+        "estimate": "69%",
+        "value": "0.691",
+        "std": "0.000",
+        "splits": "1",
+        "status": "Fail"
+      }
+    }
+  ],
+  "shap_results": [
+    {
+      "class": "I",
+      "pearson": {
+        "estimate": "0.833 \u00b1 0.063",
+        "value": "0.833",
+        "std": "0.063",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.769 \u00b1 0.049",
+        "value": "0.769",
+        "std": "0.049",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "6.8/10"
+    },
+    {
+      "class": "II",
+      "pearson": {
+        "estimate": "0.808 \u00b1 0.062",
+        "value": "0.808",
+        "std": "0.062",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.752 \u00b1 0.066",
+        "value": "0.752",
+        "std": "0.066",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "7.2/10"
+    },
+    {
+      "class": "advanced",
+      "pearson": {
+        "estimate": "0.843 \u00b1 0.042",
+        "value": "0.843",
+        "std": "0.042",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "spearman": {
+        "estimate": "0.746 \u00b1 0.026",
+        "value": "0.746",
+        "std": "0.026",
+        "splits": "5",
+        "status": "N/A"
+      },
+      "top10": "7.6/10"
+    }
+  ],
+  "top_secrets": [
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "clinical_stage_clean",
+      "training": "0.94",
+      "control": "0.42",
+      "excess": "0.52"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "clinical_kras_mut",
+      "training": "0.96",
+      "control": "0.64",
+      "excess": "0.31"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "clinical_tp53_mut",
+      "training": "0.91",
+      "control": "0.62",
+      "excess": "0.29"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "clinical_os_months",
+      "training": "0.21",
+      "control": "0.05",
+      "excess": "0.16"
+    },
+    {
+      "attack": "Clinical QI + 100 genes",
+      "secret": "clinical_egfr_mut",
+      "training": "0.96",
+      "control": "0.82",
+      "excess": "0.14"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "clinical_stage_clean",
+      "training": "0.48",
+      "control": "0.37",
+      "excess": "0.12"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "clinical_kras_mut",
+      "training": "0.63",
+      "control": "0.59",
+      "excess": "0.05"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "clinical_tp53_mut",
+      "training": "0.55",
+      "control": "0.52",
+      "excess": "0.03"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "ALPL (gene)",
+      "training": "0.05",
+      "control": "0.02",
+      "excess": "0.03"
+    },
+    {
+      "attack": "Clinical QI only",
+      "secret": "GLB1L3 (gene)",
+      "training": "0.07",
+      "control": "0.04",
+      "excess": "0.03"
+    }
+  ],
+  "provenance": {
+    "date": "2026-11-03",
+    "pipeline": "rna-twin 0.1.0",
+    "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
+  },
+  "data_files": {
+    "root": "datasets/tcga_luad/dbTwin",
+    "cohort": "tcga_luad",
+    "release": "syn_tcga_luad.csv",
+    "fold_pattern": "syn_tcga_luad_fold_<1-5>.csv",
+    "release_rows": "510",
+    "clinical_columns": [
+      "clinical_os_months",
+      "clinical_os_status",
+      "clinical_age",
+      "clinical_sex",
+      "clinical_egfr_mut",
+      "clinical_kras_mut",
+      "clinical_alk_mut",
+      "clinical_tp53_mut",
+      "clinical_stk11_mut",
+      "clinical_stage_clean"
+    ],
+    "release_only": [],
+    "fold_only": [],
+    "n_genes": "19,719",
+    "n_ensembl": "16,933",
+    "versioned": false,
+    "ensembl_example": "ENSG00000259429",
+    "n_symbols": "2,786",
+    "symbol_examples": [
+      "TMSL3",
+      "PKM2"
+    ],
+    "de_files": [
+      "artifacts/de/de_clinical_kras_mut_0_vs_1.csv",
+      "artifacts/de/de_clinical_egfr_mut_0_vs_1.csv",
+      "artifacts/de/de_clinical_stk11_mut_0_vs_1.csv"
+    ]
+  },
+  "figure_split": "0",
+  "shap_split": "0",
+  "shap_failed_folds": 0,
+  "shap_total_folds": 5,
+  "figures": {
+    "expression_fidelity": "/datasets/tcga_luad/dbTwin/artifacts/figs/expression_fidelity.pdf",
+    "clinical_fidelity": [
+      {
+        "variable": "clinical_egfr_mut",
+        "path": "/datasets/tcga_luad/dbTwin/artifacts/figs/clinical_fidelity0.pdf"
+      },
+      {
+        "variable": "clinical_age",
+        "path": "/datasets/tcga_luad/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
+      }
+    ],
+    "gene_counts": [
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_0.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_1.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_2.pdf"
+    ],
+    "differential_expression": [
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/de_0.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/de_1.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/de_2.pdf"
+    ],
+    "shap": [
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/SHAP_Synthetic_0.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/SHAP_Synthetic_1.pdf",
+      "/datasets/tcga_luad/dbTwin/artifacts/figs/SHAP_Synthetic_2.pdf"
+    ],
+    "privacy": "/datasets/tcga_luad/dbTwin/artifacts/figs/privacy.pdf",
+    "auc_folds": "/datasets/tcga_luad/dbTwin/artifacts/figs/auc_folds.pdf",
+    "gene_stats": "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_stats.pdf"
+  }
+}

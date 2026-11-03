@@ -1,0 +1,5 @@
+target_class,variable,variable_type,metric,metric_value,n_real,n_synthetic
+No-Sepsis,age,continuous,total_variation_distance,0.11956521739130435,92,92
+No-Sepsis,sex,categorical,total_variation_distance,0.0,92,92
+SepsisBSI,age,continuous,total_variation_distance,0.11666666666666667,60,60
+SepsisBSI,sex,categorical,total_variation_distance,0.0,60,60

@@ -1,0 +1,645 @@
+sample_disease,Sample Characteristic[age at diagnosis years],Sample Characteristic[sex],source
+Crohn's disease,15.25,female,real
+Crohn's disease,14.42,male,real
+Crohn's disease,12.5,female,real
+Crohn's disease,14.58,male,real
+Crohn's disease,10.17,female,real
+Crohn's disease,15.75,female,real
+Crohn's disease,14.33,male,real
+Crohn's disease,11.42,male,real
+Crohn's disease,9.0,female,real
+cntrl,10.33,male,real
+cntrl,10.83,male,real
+Crohn's disease,13.92,female,real
+Crohn's disease,9.25,male,real
+cntrl,9.0,female,real
+Crohn's disease,13.42,male,real
+Crohn's disease,15.17,male,real
+Crohn's disease,13.25,male,real
+Crohn's disease,16.08,female,real
+cntrl,15.0,female,real
+cntrl,10.75,female,real
+Crohn's disease,10.33,male,real
+Crohn's disease,10.83,female,real
+Crohn's disease,10.17,female,real
+Crohn's disease,4.5,male,real
+Crohn's disease,6.33,female,real
+Crohn's disease,5.08,male,real
+Crohn's disease,10.33,female,real
+cntrl,16.92,female,real
+Crohn's disease,10.83,female,real
+Crohn's disease,10.75,male,real
+cntrl,12.5,female,real
+Crohn's disease,8.67,female,real
+cntrl,9.33,male,real
+cntrl,7.75,male,real
+cntrl,11.5,male,real
+cntrl,10.5,male,real
+Crohn's disease,10.5,male,real
+cntrl,8.67,male,real
+cntrl,15.33,female,real
+Crohn's disease,9.17,female,real
+cntrl,4.83,male,real
+cntrl,12.0,male,real
+Crohn's disease,12.08,female,real
+cntrl,9.17,male,real
+Crohn's disease,5.42,male,real
+Crohn's disease,15.17,female,real
+Crohn's disease,15.83,female,real
+Crohn's disease,7.67,male,real
+Crohn's disease,10.08,female,real
+Crohn's disease,13.42,male,real
+Crohn's disease,8.75,male,real
+Crohn's disease,16.08,male,real
+Crohn's disease,9.17,female,real
+cntrl,2.33,male,real
+cntrl,11.42,male,real
+Crohn's disease,13.25,female,real
+Crohn's disease,7.58,male,real
+Crohn's disease,16.17,male,real
+Crohn's disease,9.42,male,real
+Crohn's disease,13.58,male,real
+Crohn's disease,10.42,male,real
+Crohn's disease,10.67,male,real
+Crohn's disease,8.5,female,real
+cntrl,14.25,male,real
+cntrl,12.33,female,real
+Crohn's disease,8.42,male,real
+cntrl,12.92,male,real
+Crohn's disease,10.33,male,real
+Crohn's disease,12.08,female,real
+Crohn's disease,8.58,female,real
+Crohn's disease,10.67,male,real
+cntrl,13.08,female,real
+Crohn's disease,8.58,female,real
+Crohn's disease,5.42,female,real
+Crohn's disease,16.5,male,real
+cntrl,11.0,female,real
+cntrl,7.25,male,real
+cntrl,12.83,male,real
+cntrl,8.5,male,real
+cntrl,14.17,male,real
+cntrl,15.83,male,real
+cntrl,15.58,male,real
+cntrl,11.42,male,real
+cntrl,10.25,male,real
+cntrl,6.58,female,real
+cntrl,14.75,female,real
+cntrl,11.58,female,real
+cntrl,10.33,female,real
+cntrl,15.75,male,real
+cntrl,9.92,female,real
+Crohn's disease,14.75,male,real
+ulcerative colitis,9.83,male,real
+Crohn's disease,5.75,male,real
+Crohn's disease,9.75,female,real
+Crohn's disease,14.75,male,real
+Crohn's disease,13.08,female,real
+Crohn's disease,14.17,female,real
+Crohn's disease,14.83,male,real
+Crohn's disease,15.5,female,real
+Crohn's disease,12.83,female,real
+Crohn's disease,2.25,female,real
+Crohn's disease,11.58,female,real
+Crohn's disease,14.83,male,real
+Crohn's disease,14.08,male,real
+Crohn's disease,15.92,male,real
+Crohn's disease,13.17,female,real
+Crohn's disease,15.75,male,real
+Crohn's disease,15.0,male,real
+Crohn's disease,13.58,male,real
+Crohn's disease,11.33,male,real
+Crohn's disease,14.5,male,real
+Crohn's disease,14.33,female,real
+Crohn's disease,13.42,female,real
+ulcerative colitis,9.92,male,real
+Crohn's disease,14.08,female,real
+Crohn's disease,11.33,male,real
+cntrl,7.83,male,real
+cntrl,9.67,male,real
+ulcerative colitis,12.67,male,real
+cntrl,8.0,male,real
+cntrl,10.67,female,real
+ulcerative colitis,10.5,female,real
+ulcerative colitis,8.5,female,real
+ulcerative colitis,11.67,female,real
+ulcerative colitis,5.75,male,real
+ulcerative colitis,5.5,male,real
+ulcerative colitis,14.5,female,real
+ulcerative colitis,11.5,female,real
+ulcerative colitis,11.83,male,real
+ulcerative colitis,15.5,male,real
+ulcerative colitis,8.25,female,real
+Crohn's disease,9.17,male,real
+Crohn's disease,13.67,male,real
+Crohn's disease,11.5,male,real
+Crohn's disease,14.42,male,real
+Crohn's disease,11.58,female,real
+Crohn's disease,15.83,male,real
+Crohn's disease,11.75,female,real
+Crohn's disease,11.5,male,real
+Crohn's disease,11.0,female,real
+Crohn's disease,12.33,female,real
+Crohn's disease,6.25,male,real
+Crohn's disease,10.67,female,real
+ulcerative colitis,13.08,female,real
+Crohn's disease,11.25,female,real
+Crohn's disease,7.25,female,real
+Crohn's disease,11.08,male,real
+Crohn's disease,8.83,male,real
+Crohn's disease,11.17,male,real
+Crohn's disease,10.67,male,real
+ulcerative colitis,6.75,female,real
+ulcerative colitis,9.67,male,real
+ulcerative colitis,8.5,male,real
+ulcerative colitis,14.42,female,real
+ulcerative colitis,13.17,female,real
+Crohn's disease,6.75,female,real
+Crohn's disease,8.83,female,real
+Crohn's disease,7.83,female,real
+Crohn's disease,11.92,female,real
+Crohn's disease,12.58,male,real
+Crohn's disease,8.83,female,real
+Crohn's disease,9.75,female,real
+Crohn's disease,9.25,female,real
+Crohn's disease,8.83,female,real
+Crohn's disease,9.75,female,real
+Crohn's disease,9.58,male,real
+Crohn's disease,9.58,male,real
+Crohn's disease,9.25,male,real
+Crohn's disease,9.08,male,real
+Crohn's disease,9.0,male,real
+Crohn's disease,16.42,male,real
+Crohn's disease,16.08,male,real
+Crohn's disease,8.92,female,real
+Crohn's disease,7.92,male,real
+Crohn's disease,7.92,male,real
+Crohn's disease,8.92,male,real
+Crohn's disease,9.58,male,real
+Crohn's disease,6.75,male,real
+Crohn's disease,8.83,male,real
+cntrl,12.67,female,real
+Crohn's disease,8.42,male,real
+Crohn's disease,9.17,male,real
+Crohn's disease,7.33,male,real
+Crohn's disease,5.67,male,real
+Crohn's disease,8.75,male,real
+Crohn's disease,9.25,male,real
+Crohn's disease,8.0,male,real
+Crohn's disease,6.17,female,real
+Crohn's disease,8.0,female,real
+Crohn's disease,7.17,male,real
+Crohn's disease,14.5,female,real
+Crohn's disease,15.17,male,real
+Crohn's disease,15.25,female,real
+Crohn's disease,9.5,female,real
+Crohn's disease,14.33,male,real
+Crohn's disease,13.92,female,real
+Crohn's disease,11.25,male,real
+Crohn's disease,13.75,male,real
+Crohn's disease,14.33,female,real
+Crohn's disease,15.58,female,real
+Crohn's disease,15.0,female,real
+Crohn's disease,14.75,female,real
+Crohn's disease,16.83,male,real
+Crohn's disease,16.92,female,real
+Crohn's disease,15.42,female,real
+Crohn's disease,15.33,female,real
+Crohn's disease,16.5,male,real
+Crohn's disease,12.75,male,real
+Crohn's disease,11.17,male,real
+Crohn's disease,15.33,male,real
+Crohn's disease,15.0,male,real
+Crohn's disease,12.0,female,real
+Crohn's disease,16.25,female,real
+Crohn's disease,15.58,female,real
+Crohn's disease,13.83,male,real
+Crohn's disease,12.42,male,real
+Crohn's disease,11.92,male,real
+Crohn's disease,15.83,female,real
+Crohn's disease,13.58,male,real
+Crohn's disease,12.67,male,real
+Crohn's disease,10.75,female,real
+Crohn's disease,16.5,female,real
+Crohn's disease,10.67,female,real
+Crohn's disease,12.08,male,real
+Crohn's disease,15.42,female,real
+ulcerative colitis,11.92,female,real
+Crohn's disease,13.17,male,real
+Crohn's disease,10.83,male,real
+Crohn's disease,15.5,male,real
+Crohn's disease,16.75,male,real
+Crohn's disease,10.17,female,real
+ulcerative colitis,8.5,male,real
+ulcerative colitis,14.0,male,real
+ulcerative colitis,13.75,male,real
+ulcerative colitis,16.58,female,real
+Crohn's disease,12.42,female,real
+Crohn's disease,12.58,male,real
+ulcerative colitis,5.75,male,real
+ulcerative colitis,15.0,male,real
+ulcerative colitis,11.83,female,real
+ulcerative colitis,12.0,female,real
+ulcerative colitis,13.25,male,real
+ulcerative colitis,11.58,male,real
+ulcerative colitis,15.58,female,real
+ulcerative colitis,14.92,female,real
+ulcerative colitis,14.92,male,real
+ulcerative colitis,6.33,female,real
+ulcerative colitis,13.67,female,real
+ulcerative colitis,16.92,female,real
+ulcerative colitis,6.92,male,real
+ulcerative colitis,16.83,female,real
+Crohn's disease,14.92,female,real
+Crohn's disease,15.08,male,real
+Crohn's disease,13.17,female,real
+Crohn's disease,14.42,male,real
+Crohn's disease,12.83,female,real
+Crohn's disease,11.42,male,real
+Crohn's disease,11.92,male,real
+Crohn's disease,16.25,male,real
+Crohn's disease,12.75,male,real
+Crohn's disease,10.75,male,real
+Crohn's disease,15.67,male,real
+Crohn's disease,12.0,male,real
+Crohn's disease,15.5,male,real
+Crohn's disease,12.83,male,real
+Crohn's disease,15.92,male,real
+Crohn's disease,13.67,female,real
+Crohn's disease,15.75,male,real
+Crohn's disease,13.92,male,real
+Crohn's disease,16.75,male,real
+Crohn's disease,11.67,male,real
+ulcerative colitis,12.0,female,real
+Crohn's disease,16.92,male,real
+Crohn's disease,12.33,female,real
+Crohn's disease,10.83,female,real
+Crohn's disease,13.25,male,real
+ulcerative colitis,7.25,male,real
+Crohn's disease,15.83,male,real
+Crohn's disease,14.25,female,real
+ulcerative colitis,16.58,female,real
+Crohn's disease,16.5,male,real
+ulcerative colitis,16.5,male,real
+ulcerative colitis,15.5,male,real
+ulcerative colitis,15.33,male,real
+Crohn's disease,12.67,female,real
+Crohn's disease,6.58,male,real
+Crohn's disease,16.25,female,real
+ulcerative colitis,13.75,male,real
+Crohn's disease,14.08,female,real
+ulcerative colitis,13.75,male,real
+ulcerative colitis,7.42,male,real
+ulcerative colitis,10.83,male,real
+Crohn's disease,12.5,female,real
+ulcerative colitis,15.08,male,real
+ulcerative colitis,9.42,male,real
+Crohn's disease,10.58,male,real
+ulcerative colitis,15.83,male,real
+ulcerative colitis,15.92,male,real
+Crohn's disease,12.75,male,real
+Crohn's disease,13.0,male,real
+ulcerative colitis,16.67,female,real
+ulcerative colitis,17.08,male,real
+Crohn's disease,15.33,male,real
+Crohn's disease,10.83,male,real
+ulcerative colitis,13.58,male,real
+ulcerative colitis,16.33,female,real
+Crohn's disease,11.83,male,real
+ulcerative colitis,15.75,male,real
+Crohn's disease,13.67,female,real
+Crohn's disease,13.17,female,real
+Crohn's disease,13.83,male,real
+Crohn's disease,10.67,male,real
+Crohn's disease,5.42,female,real
+Crohn's disease,11.0,male,real
+ulcerative colitis,14.92,female,real
+ulcerative colitis,16.91,female,real
+Crohn's disease,10.5,male,real
+ulcerative colitis,4.5,female,real
+ulcerative colitis,11.0,male,real
+Crohn's disease,15.75,female,real
+Crohn's disease,9.58,female,real
+ulcerative colitis,14.17,male,real
+cntrl,7.027760969240574,male,synthetic
+Crohn's disease,15.852519363990773,male,synthetic
+ulcerative colitis,8.444563444984933,female,synthetic
+Crohn's disease,14.706571642543548,male,synthetic
+Crohn's disease,8.753667875525855,female,synthetic
+Crohn's disease,10.590945109429564,male,synthetic
+ulcerative colitis,16.256075377373755,male,synthetic
+Crohn's disease,11.226641967916748,male,synthetic
+ulcerative colitis,6.490546016879153,female,synthetic
+Crohn's disease,15.068233801663675,female,synthetic
+Crohn's disease,8.629475017402816,male,synthetic
+cntrl,12.351625737586913,female,synthetic
+cntrl,11.722539208139056,female,synthetic
+Crohn's disease,10.731663779735202,female,synthetic
+Crohn's disease,16.738933899342026,female,synthetic
+Crohn's disease,12.17376065160415,female,synthetic
+ulcerative colitis,14.820969659656294,female,synthetic
+Crohn's disease,14.089470496055872,male,synthetic
+Crohn's disease,13.705500506796264,male,synthetic
+cntrl,9.482876571048,male,synthetic
+Crohn's disease,11.226641967916748,male,synthetic
+Crohn's disease,13.733498056375062,female,synthetic
+Crohn's disease,13.753144236141182,male,synthetic
+Crohn's disease,12.916760738240054,male,synthetic
+Crohn's disease,9.989576649851264,female,synthetic
+Crohn's disease,9.546638122566458,female,synthetic
+ulcerative colitis,9.571759063804835,male,synthetic
+ulcerative colitis,15.194086446681055,male,synthetic
+Crohn's disease,14.972657353653156,male,synthetic
+Crohn's disease,14.419009301127211,female,synthetic
+Crohn's disease,12.48497776820686,male,synthetic
+Crohn's disease,8.647166620841638,female,synthetic
+Crohn's disease,9.892036438736955,female,synthetic
+Crohn's disease,7.857106201793351,male,synthetic
+Crohn's disease,14.154767329114526,male,synthetic
+Crohn's disease,9.136318009969546,male,synthetic
+Crohn's disease,7.902195415137693,female,synthetic
+Crohn's disease,14.291889746940749,female,synthetic
+Crohn's disease,14.984379819487993,male,synthetic
+Crohn's disease,8.680950512447586,female,synthetic
+ulcerative colitis,8.127105343022864,female,synthetic
+Crohn's disease,8.664279998866382,male,synthetic
+Crohn's disease,7.042005985241735,female,synthetic
+ulcerative colitis,13.323744598798037,male,synthetic
+Crohn's disease,8.428724422972856,female,synthetic
+Crohn's disease,9.546638122566458,female,synthetic
+Crohn's disease,13.65204900786686,male,synthetic
+ulcerative colitis,10.97126941804133,male,synthetic
+cntrl,10.613572636735997,female,synthetic
+Crohn's disease,7.860032876896105,male,synthetic
+Crohn's disease,9.546638122566458,female,synthetic
+Crohn's disease,15.63835586952314,male,synthetic
+ulcerative colitis,16.54125328160188,female,synthetic
+ulcerative colitis,13.107018097323165,female,synthetic
+Crohn's disease,14.089470496055872,male,synthetic
+Crohn's disease,16.463156672448246,female,synthetic
+Crohn's disease,9.108240353284163,male,synthetic
+ulcerative colitis,13.323744598798037,male,synthetic
+Crohn's disease,10.395729882493256,male,synthetic
+ulcerative colitis,6.490546016879153,female,synthetic
+Crohn's disease,13.705500506796264,male,synthetic
+Crohn's disease,16.251498280910454,male,synthetic
+Crohn's disease,12.819382324971324,female,synthetic
+Crohn's disease,6.263162514330945,female,synthetic
+Crohn's disease,11.222640258935249,male,synthetic
+ulcerative colitis,9.993424906038028,male,synthetic
+Crohn's disease,15.38564144494361,female,synthetic
+ulcerative colitis,14.569061670541537,female,synthetic
+Crohn's disease,12.717089343896584,female,synthetic
+Crohn's disease,8.663214079584579,female,synthetic
+Crohn's disease,16.310628692173857,male,synthetic
+ulcerative colitis,14.0667346610768,male,synthetic
+cntrl,10.18996387692543,male,synthetic
+ulcerative colitis,11.518665476913716,male,synthetic
+Crohn's disease,7.635913677065865,male,synthetic
+Crohn's disease,14.11430142787632,female,synthetic
+ulcerative colitis,6.5238529709718485,female,synthetic
+Crohn's disease,5.52072332549607,female,synthetic
+Crohn's disease,13.722390604129505,male,synthetic
+Crohn's disease,8.73466918779722,female,synthetic
+ulcerative colitis,11.574413732155191,female,synthetic
+Crohn's disease,10.697947882920674,male,synthetic
+Crohn's disease,10.599163216961454,female,synthetic
+Crohn's disease,13.28526506601103,male,synthetic
+cntrl,15.489114218016,female,synthetic
+Crohn's disease,13.459559578116547,female,synthetic
+Crohn's disease,14.44332447201009,male,synthetic
+Crohn's disease,16.924689654593877,male,synthetic
+Crohn's disease,8.987771239715391,male,synthetic
+cntrl,12.688655486151449,male,synthetic
+ulcerative colitis,16.54125328160188,female,synthetic
+Crohn's disease,11.827689181139116,male,synthetic
+Crohn's disease,14.283869773856276,male,synthetic
+ulcerative colitis,13.107018097323165,female,synthetic
+Crohn's disease,10.20303429172426,male,synthetic
+ulcerative colitis,16.797301059298906,male,synthetic
+Crohn's disease,15.82052977124562,male,synthetic
+Crohn's disease,7.902195415137693,female,synthetic
+Crohn's disease,8.663214079584579,female,synthetic
+cntrl,7.883687376821991,male,synthetic
+Crohn's disease,15.909478669411172,female,synthetic
+Crohn's disease,14.666318035457715,male,synthetic
+Crohn's disease,5.386685488125162,male,synthetic
+Crohn's disease,6.782034612566909,male,synthetic
+Crohn's disease,16.28747248360856,male,synthetic
+Crohn's disease,6.272373715687903,female,synthetic
+Crohn's disease,15.715128872958156,male,synthetic
+cntrl,15.489114218016,female,synthetic
+Crohn's disease,10.241651243287984,female,synthetic
+Crohn's disease,12.299084608054802,female,synthetic
+Crohn's disease,10.464119359663746,male,synthetic
+cntrl,8.105380818192364,male,synthetic
+Crohn's disease,14.706571642543548,male,synthetic
+Crohn's disease,5.386685488125162,male,synthetic
+Crohn's disease,15.43128775699413,female,synthetic
+cntrl,10.425645210632988,male,synthetic
+cntrl,15.9338249766029,male,synthetic
+Crohn's disease,11.827689181139116,male,synthetic
+Crohn's disease,15.434705793515732,male,synthetic
+Crohn's disease,15.701264148107208,female,synthetic
+Crohn's disease,9.53052175815043,female,synthetic
+Crohn's disease,16.039400275730355,male,synthetic
+Crohn's disease,13.604144963026078,female,synthetic
+Crohn's disease,13.18450210191368,female,synthetic
+Crohn's disease,16.28747248360856,male,synthetic
+Crohn's disease,14.031766792858456,female,synthetic
+Crohn's disease,7.860032876896105,male,synthetic
+Crohn's disease,14.989316652832652,female,synthetic
+ulcerative colitis,15.34504759843296,male,synthetic
+Crohn's disease,10.366995269889864,male,synthetic
+Crohn's disease,11.03824769384223,female,synthetic
+Crohn's disease,9.503567933464373,male,synthetic
+Crohn's disease,17.030393006201347,male,synthetic
+cntrl,11.593932064746426,male,synthetic
+Crohn's disease,11.777333937272816,female,synthetic
+Crohn's disease,11.818102927417536,female,synthetic
+Crohn's disease,16.371803038208512,female,synthetic
+ulcerative colitis,9.862568390298982,male,synthetic
+cntrl,10.12508071280848,female,synthetic
+Crohn's disease,16.10066713372847,male,synthetic
+Crohn's disease,12.486810561983992,male,synthetic
+Crohn's disease,15.084794227381702,male,synthetic
+Crohn's disease,14.648585171842782,male,synthetic
+Crohn's disease,5.548998655464457,male,synthetic
+ulcerative colitis,9.571759063804835,male,synthetic
+Crohn's disease,12.841327376323108,male,synthetic
+Crohn's disease,9.128064844650448,male,synthetic
+ulcerative colitis,13.323744598798037,male,synthetic
+Crohn's disease,13.061733574629962,male,synthetic
+cntrl,8.653533464986875,male,synthetic
+Crohn's disease,15.576605988616777,male,synthetic
+Crohn's disease,11.394149387765635,male,synthetic
+Crohn's disease,9.03410276720658,male,synthetic
+Crohn's disease,15.38564144494361,female,synthetic
+Crohn's disease,6.263162514330945,female,synthetic
+Crohn's disease,5.742320834837586,male,synthetic
+Crohn's disease,16.831254550255363,male,synthetic
+cntrl,11.56580105826232,male,synthetic
+Crohn's disease,11.143944644163096,male,synthetic
+Crohn's disease,15.208032817495525,female,synthetic
+Crohn's disease,11.288305078340208,female,synthetic
+Crohn's disease,8.785082221024085,female,synthetic
+cntrl,15.489114218016,female,synthetic
+cntrl,10.12508071280848,female,synthetic
+ulcerative colitis,16.55893802941827,female,synthetic
+Crohn's disease,8.896263555632247,female,synthetic
+Crohn's disease,5.989134527534051,male,synthetic
+ulcerative colitis,5.333833814421874,male,synthetic
+ulcerative colitis,7.6046148063221155,male,synthetic
+Crohn's disease,13.801516644033082,female,synthetic
+ulcerative colitis,6.615289071348168,male,synthetic
+cntrl,11.103124391078062,male,synthetic
+Crohn's disease,14.666318035457715,male,synthetic
+Crohn's disease,10.63561404826916,male,synthetic
+Crohn's disease,8.896263555632247,female,synthetic
+Crohn's disease,14.989316652832652,female,synthetic
+ulcerative colitis,5.791825929286185,male,synthetic
+Crohn's disease,8.840395117227544,male,synthetic
+Crohn's disease,15.434705793515732,male,synthetic
+cntrl,8.844776638449835,female,synthetic
+cntrl,10.591333649088556,female,synthetic
+Crohn's disease,10.200851820782,female,synthetic
+cntrl,12.820389387665164,female,synthetic
+Crohn's disease,10.528613094053004,male,synthetic
+ulcerative colitis,7.6046148063221155,male,synthetic
+ulcerative colitis,14.817456570004897,male,synthetic
+cntrl,14.603164507930344,female,synthetic
+cntrl,14.036974814188143,male,synthetic
+Crohn's disease,11.457212200428138,male,synthetic
+cntrl,12.820389387665164,female,synthetic
+ulcerative colitis,16.21064697035947,female,synthetic
+Crohn's disease,15.701264148107208,female,synthetic
+cntrl,8.844776638449835,female,synthetic
+Crohn's disease,15.666924855235036,male,synthetic
+Crohn's disease,7.113923231019911,male,synthetic
+Crohn's disease,13.528941734576415,male,synthetic
+Crohn's disease,10.851850654789208,male,synthetic
+Crohn's disease,12.22756531148252,female,synthetic
+cntrl,7.027760969240574,male,synthetic
+Crohn's disease,16.01752174217715,female,synthetic
+Crohn's disease,5.52072332549607,female,synthetic
+Crohn's disease,9.25631347404316,male,synthetic
+Crohn's disease,15.889422874974512,female,synthetic
+Crohn's disease,13.753144236141182,male,synthetic
+Crohn's disease,9.128064844650448,male,synthetic
+Crohn's disease,10.590945109429564,male,synthetic
+ulcerative colitis,5.624736996810035,male,synthetic
+Crohn's disease,15.232888362988708,female,synthetic
+Crohn's disease,10.200851820782,female,synthetic
+Crohn's disease,14.261431227026431,female,synthetic
+Crohn's disease,12.22756531148252,female,synthetic
+cntrl,10.18996387692543,male,synthetic
+Crohn's disease,10.599163216961454,female,synthetic
+ulcerative colitis,13.646593502079606,male,synthetic
+Crohn's disease,11.394149387765635,male,synthetic
+Crohn's disease,11.75918003328517,female,synthetic
+Crohn's disease,10.851850654789208,male,synthetic
+Crohn's disease,16.310628692173857,male,synthetic
+Crohn's disease,8.629475017402816,male,synthetic
+cntrl,11.722539208139056,female,synthetic
+cntrl,7.027760969240574,male,synthetic
+ulcerative colitis,15.905970377905494,male,synthetic
+Crohn's disease,11.241428013910872,male,synthetic
+Crohn's disease,11.943659489969727,female,synthetic
+ulcerative colitis,11.912671467588083,female,synthetic
+cntrl,15.9338249766029,male,synthetic
+Crohn's disease,13.28526506601103,male,synthetic
+ulcerative colitis,14.76187633196866,male,synthetic
+Crohn's disease,9.480238183114125,male,synthetic
+Crohn's disease,14.291889746940749,female,synthetic
+ulcerative colitis,15.880214554468033,male,synthetic
+Crohn's disease,14.143271138572295,female,synthetic
+ulcerative colitis,11.70438468051804,female,synthetic
+Crohn's disease,16.039400275730355,male,synthetic
+ulcerative colitis,11.70438468051804,female,synthetic
+cntrl,9.482876571048,male,synthetic
+cntrl,16.063913666349073,male,synthetic
+Crohn's disease,16.251498280910454,male,synthetic
+Crohn's disease,12.70582951776984,female,synthetic
+Crohn's disease,16.310628692173857,male,synthetic
+ulcerative colitis,15.391927571104684,female,synthetic
+ulcerative colitis,14.460091640326162,female,synthetic
+cntrl,7.713758168169776,male,synthetic
+ulcerative colitis,16.43398848025425,female,synthetic
+cntrl,12.76776013094757,female,synthetic
+Crohn's disease,11.222640258935249,male,synthetic
+Crohn's disease,13.28526506601103,male,synthetic
+Crohn's disease,12.949187461051022,male,synthetic
+Crohn's disease,4.252395610766506,male,synthetic
+Crohn's disease,11.206926897462605,male,synthetic
+Crohn's disease,15.208032817495525,female,synthetic
+Crohn's disease,14.448901232839097,male,synthetic
+ulcerative colitis,15.465674762778466,male,synthetic
+Crohn's disease,7.113923231019911,male,synthetic
+Crohn's disease,12.41854328897378,female,synthetic
+Crohn's disease,14.888876981462024,male,synthetic
+cntrl,11.56580105826232,male,synthetic
+Crohn's disease,11.341549025436835,male,synthetic
+ulcerative colitis,11.867281100897925,female,synthetic
+ulcerative colitis,13.922596756260932,male,synthetic
+Crohn's disease,10.568533272866864,male,synthetic
+Crohn's disease,14.448901232839097,male,synthetic
+ulcerative colitis,11.304276631905566,female,synthetic
+Crohn's disease,8.680950512447586,female,synthetic
+Crohn's disease,9.140243654041376,female,synthetic
+ulcerative colitis,16.89622353223299,female,synthetic
+ulcerative colitis,7.6046148063221155,male,synthetic
+Crohn's disease,10.883702894933435,male,synthetic
+ulcerative colitis,14.054523004992364,male,synthetic
+Crohn's disease,13.65204900786686,male,synthetic
+Crohn's disease,12.90758245655529,male,synthetic
+ulcerative colitis,10.97126941804133,male,synthetic
+Crohn's disease,8.442972785027532,male,synthetic
+Crohn's disease,9.480238183114125,male,synthetic
+cntrl,11.593932064746426,male,synthetic
+ulcerative colitis,8.542629722173022,male,synthetic
+Crohn's disease,14.313219532217293,female,synthetic
+ulcerative colitis,15.465674762778466,male,synthetic
+Crohn's disease,10.90203052810233,female,synthetic
+Crohn's disease,11.737604271131277,male,synthetic
+Crohn's disease,11.953600897671343,female,synthetic
+ulcerative colitis,15.880214554468033,male,synthetic
+Crohn's disease,10.731663779735202,female,synthetic
+Crohn's disease,12.70582951776984,female,synthetic
+Crohn's disease,8.824321798500637,male,synthetic
+Crohn's disease,15.158114264115028,male,synthetic
+Crohn's disease,10.731663779735202,female,synthetic
+Crohn's disease,5.989134527534051,male,synthetic
+ulcerative colitis,10.903825116231712,male,synthetic
+ulcerative colitis,11.867281100897925,female,synthetic
+Crohn's disease,15.897182499493113,female,synthetic
+Crohn's disease,13.408305100140796,female,synthetic
+ulcerative colitis,14.569061670541537,female,synthetic
+Crohn's disease,7.902195415137693,female,synthetic
+ulcerative colitis,11.304276631905566,female,synthetic
+Crohn's disease,14.972657353653156,male,synthetic
+Crohn's disease,15.38564144494361,female,synthetic
+Crohn's disease,15.909478669411172,female,synthetic
+Crohn's disease,11.738614587828724,male,synthetic
+cntrl,13.898957347707874,male,synthetic
+Crohn's disease,14.933988260421392,male,synthetic
+cntrl,9.482876571048,male,synthetic
+Crohn's disease,15.03412369345807,female,synthetic
+Crohn's disease,9.136318009969546,male,synthetic
+ulcerative colitis,13.293947733647974,male,synthetic
+Crohn's disease,10.20303429172426,male,synthetic
+Crohn's disease,7.635913677065865,male,synthetic
+Crohn's disease,14.933988260421392,male,synthetic
+cntrl,8.597182840768173,male,synthetic
+Crohn's disease,9.84916714577021,male,synthetic
+Crohn's disease,13.034754307022276,female,synthetic
+cntrl,12.688655486151449,male,synthetic
+Crohn's disease,12.604654724410222,male,synthetic
+Crohn's disease,12.949187461051022,male,synthetic
+ulcerative colitis,16.80937779425635,female,synthetic
+Crohn's disease,13.034754307022276,female,synthetic
+Crohn's disease,13.034754307022276,female,synthetic
+Crohn's disease,12.036409254987568,male,synthetic
+Crohn's disease,11.60022178964392,male,synthetic
+Crohn's disease,11.818102927417536,female,synthetic
+Crohn's disease,12.90758245655529,male,synthetic
+Crohn's disease,9.892036438736955,female,synthetic

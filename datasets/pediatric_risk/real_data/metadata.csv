@@ -1,0 +1,323 @@
+Run,sample_disease,Sample Characteristic[sex],Sample Characteristic[age at diagnosis years],Sample Characteristic[organism part]
+SRR1782685,Crohn's disease,female,15.25,ileum
+SRR1782686,Crohn's disease,male,14.42,ileum
+SRR1782687,Crohn's disease,female,12.5,ileum
+SRR1782688,Crohn's disease,male,14.58,ileum
+SRR1782689,Crohn's disease,female,10.17,ileum
+SRR1782690,Crohn's disease,female,15.75,ileum
+SRR1782691,Crohn's disease,male,14.33,ileum
+SRR1782692,Crohn's disease,male,11.42,ileum
+SRR1782693,Crohn's disease,female,9.0,ileum
+SRR1782694,cntrl,male,10.33,ileum
+SRR1782695,cntrl,male,10.83,ileum
+SRR1782696,Crohn's disease,female,13.92,ileum
+SRR1782697,Crohn's disease,male,9.25,ileum
+SRR1782698,cntrl,female,9.0,ileum
+SRR1782699,Crohn's disease,male,13.42,ileum
+SRR1782700,Crohn's disease,male,15.17,ileum
+SRR1782701,Crohn's disease,male,13.25,ileum
+SRR1782702,Crohn's disease,female,16.08,ileum
+SRR1782703,cntrl,female,15.0,ileum
+SRR1782704,cntrl,female,10.75,ileum
+SRR1782705,Crohn's disease,male,10.33,ileum
+SRR1782706,Crohn's disease,female,10.83,ileum
+SRR1782707,Crohn's disease,female,10.17,ileum
+SRR1782708,Crohn's disease,male,4.5,ileum
+SRR1782709,Crohn's disease,female,6.33,ileum
+SRR1782710,Crohn's disease,male,5.08,ileum
+SRR1782711,Crohn's disease,female,10.33,ileum
+SRR1782712,cntrl,female,16.92,ileum
+SRR1782713,Crohn's disease,female,10.83,ileum
+SRR1782714,Crohn's disease,male,10.75,ileum
+SRR1782715,cntrl,female,12.5,ileum
+SRR1782716,Crohn's disease,female,8.67,ileum
+SRR1782717,cntrl,male,9.33,ileum
+SRR1782718,cntrl,male,7.75,ileum
+SRR1782719,cntrl,male,11.5,ileum
+SRR1782720,cntrl,male,10.5,ileum
+SRR1782721,Crohn's disease,male,10.5,ileum
+SRR1782722,cntrl,male,8.67,ileum
+SRR1782723,cntrl,female,15.33,ileum
+SRR1782724,Crohn's disease,female,9.17,ileum
+SRR1782725,cntrl,male,4.83,ileum
+SRR1782726,cntrl,male,12.0,ileum
+SRR1782727,Crohn's disease,female,12.08,ileum
+SRR1782728,cntrl,male,9.17,ileum
+SRR1782729,Crohn's disease,male,5.42,ileum
+SRR1782730,Crohn's disease,female,15.17,ileum
+SRR1782731,Crohn's disease,female,15.83,ileum
+SRR1782732,Crohn's disease,male,7.67,ileum
+SRR1782733,Crohn's disease,female,10.08,ileum
+SRR1782734,Crohn's disease,male,13.42,ileum
+SRR1782735,Crohn's disease,male,8.75,ileum
+SRR1782736,Crohn's disease,male,16.08,ileum
+SRR1782737,Crohn's disease,female,9.17,ileum
+SRR1782738,cntrl,male,2.33,ileum
+SRR1782739,cntrl,male,11.42,ileum
+SRR1782740,Crohn's disease,female,13.25,ileum
+SRR1782741,Crohn's disease,male,7.58,ileum
+SRR1782742,Crohn's disease,male,16.17,ileum
+SRR1782743,Crohn's disease,male,9.42,ileum
+SRR1782744,Crohn's disease,male,13.58,ileum
+SRR1782745,Crohn's disease,male,10.42,ileum
+SRR1782746,Crohn's disease,male,10.67,ileum
+SRR1782747,Crohn's disease,female,8.5,ileum
+SRR1782748,cntrl,male,14.25,ileum
+SRR1782749,cntrl,female,12.33,ileum
+SRR1782750,Crohn's disease,male,8.42,ileum
+SRR1782751,cntrl,male,12.92,ileum
+SRR1782752,Crohn's disease,male,10.33,ileum
+SRR1782753,Crohn's disease,female,12.08,ileum
+SRR1782754,Crohn's disease,female,8.58,ileum
+SRR1782755,Crohn's disease,male,10.67,ileum
+SRR1782756,cntrl,female,13.08,ileum
+SRR1782757,Crohn's disease,female,8.58,ileum
+SRR1782758,Crohn's disease,female,5.42,ileum
+SRR1782759,Crohn's disease,male,16.5,ileum
+SRR1782760,cntrl,female,11.0,ileum
+SRR1782761,cntrl,male,7.25,ileum
+SRR1782762,cntrl,male,12.83,ileum
+SRR1782763,cntrl,male,8.5,ileum
+SRR1782764,cntrl,male,14.17,ileum
+SRR1782765,cntrl,male,15.83,ileum
+SRR1782766,cntrl,male,15.58,ileum
+SRR1782767,cntrl,male,11.42,ileum
+SRR1782768,cntrl,male,10.25,ileum
+SRR1782769,cntrl,female,6.58,ileum
+SRR1782770,cntrl,female,14.75,ileum
+SRR1782771,cntrl,female,11.58,ileum
+SRR1782772,cntrl,female,10.33,ileum
+SRR1782773,cntrl,male,15.75,ileum
+SRR1782774,cntrl,female,9.92,ileum
+SRR1782775,Crohn's disease,male,14.75,ileum
+SRR1782776,ulcerative colitis,male,9.83,ileum
+SRR1782777,Crohn's disease,male,5.75,ileum
+SRR1782778,Crohn's disease,female,9.75,ileum
+SRR1782779,Crohn's disease,male,14.75,ileum
+SRR1782780,Crohn's disease,female,13.08,ileum
+SRR1782781,Crohn's disease,female,14.17,ileum
+SRR1782782,Crohn's disease,male,14.83,ileum
+SRR1782783,Crohn's disease,female,15.5,ileum
+SRR1782784,Crohn's disease,female,12.83,ileum
+SRR1782785,Crohn's disease,female,2.25,ileum
+SRR1782786,Crohn's disease,female,11.58,ileum
+SRR1782787,Crohn's disease,male,14.83,ileum
+SRR1782788,Crohn's disease,male,14.08,ileum
+SRR1782789,Crohn's disease,male,15.92,ileum
+SRR1782790,Crohn's disease,female,13.17,ileum
+SRR1782791,Crohn's disease,male,15.75,ileum
+SRR1782792,Crohn's disease,male,15.0,ileum
+SRR1782793,Crohn's disease,male,13.58,ileum
+SRR1782794,Crohn's disease,male,11.33,ileum
+SRR1782795,Crohn's disease,male,14.5,ileum
+SRR1782796,Crohn's disease,female,14.33,ileum
+SRR1782797,Crohn's disease,female,13.42,ileum
+SRR1782798,ulcerative colitis,male,9.92,ileum
+SRR1782799,Crohn's disease,female,14.08,ileum
+SRR1782800,Crohn's disease,male,11.33,ileum
+SRR1782801,cntrl,male,7.83,ileum
+SRR1782802,cntrl,male,9.67,ileum
+SRR1782803,ulcerative colitis,male,12.67,ileum
+SRR1782804,cntrl,male,8.0,ileum
+SRR1782805,cntrl,female,10.67,ileum
+SRR1782806,ulcerative colitis,female,10.5,ileum
+SRR1782807,ulcerative colitis,female,8.5,ileum
+SRR1782808,ulcerative colitis,female,11.67,ileum
+SRR1782809,ulcerative colitis,male,5.75,ileum
+SRR1782810,ulcerative colitis,male,5.5,ileum
+SRR1782811,ulcerative colitis,female,14.5,ileum
+SRR1782812,ulcerative colitis,female,11.5,ileum
+SRR1782813,ulcerative colitis,male,11.83,ileum
+SRR1782814,ulcerative colitis,male,15.5,ileum
+SRR1782815,ulcerative colitis,female,8.25,ileum
+SRR1782816,Crohn's disease,male,9.17,ileum
+SRR1782817,Crohn's disease,male,13.67,ileum
+SRR1782818,Crohn's disease,male,11.5,ileum
+SRR1782819,Crohn's disease,male,14.42,ileum
+SRR1782820,Crohn's disease,female,11.58,ileum
+SRR1782821,Crohn's disease,male,15.83,ileum
+SRR1782822,Crohn's disease,female,11.75,ileum
+SRR1782823,Crohn's disease,male,11.5,ileum
+SRR1782824,Crohn's disease,female,11.0,ileum
+SRR1782825,Crohn's disease,female,12.33,ileum
+SRR1782826,Crohn's disease,male,6.25,ileum
+SRR1782827,Crohn's disease,female,10.67,ileum
+SRR1782828,ulcerative colitis,female,13.08,ileum
+SRR1782829,Crohn's disease,female,11.25,ileum
+SRR1782830,Crohn's disease,female,7.25,ileum
+SRR1782831,Crohn's disease,male,11.08,ileum
+SRR1782832,Crohn's disease,male,8.83,ileum
+SRR1782833,Crohn's disease,male,11.17,ileum
+SRR1782834,Crohn's disease,male,10.67,ileum
+SRR1782835,ulcerative colitis,female,6.75,ileum
+SRR1782836,ulcerative colitis,male,9.67,ileum
+SRR1782837,ulcerative colitis,male,8.5,ileum
+SRR1782838,ulcerative colitis,female,14.42,ileum
+SRR1782839,ulcerative colitis,female,13.17,ileum
+SRR1782840,Crohn's disease,female,6.75,ileum
+SRR1782841,Crohn's disease,female,8.83,ileum
+SRR1782842,Crohn's disease,female,7.83,ileum
+SRR1782843,Crohn's disease,female,11.92,ileum
+SRR1782844,Crohn's disease,male,12.58,ileum
+SRR1782845,Crohn's disease,female,8.83,ileum
+SRR1782846,Crohn's disease,female,9.75,ileum
+SRR1782847,Crohn's disease,female,9.25,ileum
+SRR1782848,Crohn's disease,female,8.83,ileum
+SRR1782849,Crohn's disease,female,9.75,ileum
+SRR1782850,Crohn's disease,male,9.58,ileum
+SRR1782851,Crohn's disease,male,9.58,ileum
+SRR1782852,Crohn's disease,male,9.25,ileum
+SRR1782853,Crohn's disease,male,9.08,ileum
+SRR1782854,Crohn's disease,male,9.0,ileum
+SRR1782855,Crohn's disease,male,16.42,ileum
+SRR1782856,Crohn's disease,male,16.08,ileum
+SRR1782857,Crohn's disease,female,8.92,ileum
+SRR1782858,Crohn's disease,male,7.92,ileum
+SRR1782859,Crohn's disease,male,7.92,ileum
+SRR1782860,Crohn's disease,male,8.92,ileum
+SRR1782861,Crohn's disease,male,9.58,ileum
+SRR1782862,Crohn's disease,male,6.75,ileum
+SRR1782863,Crohn's disease,male,8.83,ileum
+SRR1782864,cntrl,female,12.67,ileum
+SRR1782865,Crohn's disease,male,8.42,ileum
+SRR1782866,Crohn's disease,male,9.17,ileum
+SRR1782867,Crohn's disease,male,7.33,ileum
+SRR1782868,Crohn's disease,male,5.67,ileum
+SRR1782869,Crohn's disease,male,8.75,ileum
+SRR1782870,Crohn's disease,male,9.25,ileum
+SRR1782871,Crohn's disease,male,8.0,ileum
+SRR1782872,Crohn's disease,female,6.17,ileum
+SRR1782873,Crohn's disease,female,8.0,ileum
+SRR1782874,Crohn's disease,male,7.17,ileum
+SRR1782875,Crohn's disease,female,14.5,ileum
+SRR1782876,Crohn's disease,male,15.17,ileum
+SRR1782877,Crohn's disease,female,15.25,ileum
+SRR1782878,Crohn's disease,female,9.5,ileum
+SRR1782879,Crohn's disease,male,14.33,ileum
+SRR1782880,Crohn's disease,female,13.92,ileum
+SRR1782881,Crohn's disease,male,11.25,ileum
+SRR1782882,Crohn's disease,male,13.75,ileum
+SRR1782883,Crohn's disease,female,14.33,ileum
+SRR1782884,Crohn's disease,female,15.58,ileum
+SRR1782885,Crohn's disease,female,15.0,ileum
+SRR1782886,Crohn's disease,female,14.75,ileum
+SRR1782887,Crohn's disease,male,16.83,ileum
+SRR1782888,Crohn's disease,female,16.92,ileum
+SRR1782889,Crohn's disease,female,15.42,ileum
+SRR1782890,Crohn's disease,female,15.33,ileum
+SRR1782891,Crohn's disease,male,16.5,ileum
+SRR1782892,Crohn's disease,male,12.75,ileum
+SRR1782893,Crohn's disease,male,11.17,ileum
+SRR1782894,Crohn's disease,male,15.33,ileum
+SRR1782895,Crohn's disease,male,15.0,ileum
+SRR1782896,Crohn's disease,female,12.0,ileum
+SRR1782897,Crohn's disease,female,16.25,ileum
+SRR1782898,Crohn's disease,female,15.58,ileum
+SRR1782899,Crohn's disease,male,13.83,ileum
+SRR1782900,Crohn's disease,male,12.42,ileum
+SRR1782901,Crohn's disease,male,11.92,ileum
+SRR1782902,Crohn's disease,female,15.83,ileum
+SRR1782903,Crohn's disease,male,13.58,ileum
+SRR1782904,Crohn's disease,male,12.67,ileum
+SRR1782905,Crohn's disease,female,10.75,ileum
+SRR1782906,Crohn's disease,female,16.5,ileum
+SRR1782907,Crohn's disease,female,10.67,ileum
+SRR1782908,Crohn's disease,male,12.08,ileum
+SRR1782909,Crohn's disease,female,15.42,ileum
+SRR1782910,ulcerative colitis,female,11.92,ileum
+SRR1782911,Crohn's disease,male,13.17,ileum
+SRR1782912,Crohn's disease,male,10.83,ileum
+SRR1782913,Crohn's disease,male,15.5,ileum
+SRR1782914,Crohn's disease,male,16.75,ileum
+SRR1782915,Crohn's disease,female,10.17,ileum
+SRR1782916,ulcerative colitis,male,8.5,ileum
+SRR1782917,ulcerative colitis,male,14.0,ileum
+SRR1782918,ulcerative colitis,male,13.75,ileum
+SRR1782919,ulcerative colitis,female,16.58,ileum
+SRR1782920,Crohn's disease,female,12.42,ileum
+SRR1782921,Crohn's disease,male,12.58,ileum
+SRR1782922,ulcerative colitis,male,5.75,ileum
+SRR1782923,ulcerative colitis,male,15.0,ileum
+SRR1782924,ulcerative colitis,female,11.83,ileum
+SRR1782925,ulcerative colitis,female,12.0,ileum
+SRR1782926,ulcerative colitis,male,13.25,ileum
+SRR1782927,ulcerative colitis,male,11.58,ileum
+SRR1782928,ulcerative colitis,female,15.58,ileum
+SRR1782929,ulcerative colitis,female,14.92,ileum
+SRR1782930,ulcerative colitis,male,14.92,ileum
+SRR1782931,ulcerative colitis,female,6.33,ileum
+SRR1782932,ulcerative colitis,female,13.67,ileum
+SRR1782933,ulcerative colitis,female,16.92,ileum
+SRR1782934,ulcerative colitis,male,6.92,ileum
+SRR1782935,ulcerative colitis,female,16.83,ileum
+SRR1782936,Crohn's disease,female,14.92,ileum
+SRR1782937,Crohn's disease,male,15.08,ileum
+SRR1782938,Crohn's disease,female,13.17,ileum
+SRR1782939,Crohn's disease,male,14.42,ileum
+SRR1782940,Crohn's disease,female,12.83,ileum
+SRR1782941,Crohn's disease,male,11.42,ileum
+SRR1782942,Crohn's disease,male,11.92,ileum
+SRR1782943,Crohn's disease,male,16.25,ileum
+SRR1782944,Crohn's disease,male,12.75,ileum
+SRR1782945,Crohn's disease,male,10.75,ileum
+SRR1782946,Crohn's disease,male,15.67,ileum
+SRR1782947,Crohn's disease,male,12.0,ileum
+SRR1782948,Crohn's disease,male,15.5,ileum
+SRR1782949,Crohn's disease,male,12.83,ileum
+SRR1782950,Crohn's disease,male,15.92,ileum
+SRR1782951,Crohn's disease,female,13.67,ileum
+SRR1782952,Crohn's disease,male,15.75,ileum
+SRR1782953,Crohn's disease,male,13.92,ileum
+SRR1782954,Crohn's disease,male,16.75,ileum
+SRR1782955,Crohn's disease,male,11.67,ileum
+SRR1782956,ulcerative colitis,female,12.0,ileum
+SRR1782957,Crohn's disease,male,16.92,ileum
+SRR1782958,Crohn's disease,female,12.33,ileum
+SRR1782959,Crohn's disease,female,10.83,ileum
+SRR1782960,Crohn's disease,male,13.25,ileum
+SRR1782961,ulcerative colitis,male,7.25,ileum
+SRR1782962,Crohn's disease,male,15.83,ileum
+SRR1782963,Crohn's disease,female,14.25,ileum
+SRR1782964,ulcerative colitis,female,16.58,ileum
+SRR1782965,Crohn's disease,male,16.5,ileum
+SRR1782966,ulcerative colitis,male,16.5,ileum
+SRR1782967,ulcerative colitis,male,15.5,ileum
+SRR1782968,ulcerative colitis,male,15.33,ileum
+SRR1782969,Crohn's disease,female,12.67,ileum
+SRR1782970,Crohn's disease,male,6.58,ileum
+SRR1782971,Crohn's disease,female,16.25,ileum
+SRR1782972,ulcerative colitis,male,13.75,ileum
+SRR1782973,Crohn's disease,female,14.08,ileum
+SRR1782974,ulcerative colitis,male,13.75,ileum
+SRR1782975,ulcerative colitis,male,7.42,ileum
+SRR1782976,ulcerative colitis,male,10.83,ileum
+SRR1782977,Crohn's disease,female,12.5,ileum
+SRR1782978,ulcerative colitis,male,15.08,ileum
+SRR1782979,ulcerative colitis,male,9.42,ileum
+SRR1782980,Crohn's disease,male,10.58,ileum
+SRR1782981,ulcerative colitis,male,15.83,ileum
+SRR1782982,ulcerative colitis,male,15.92,ileum
+SRR1782983,Crohn's disease,male,12.75,ileum
+SRR1782984,Crohn's disease,male,13.0,ileum
+SRR1782985,ulcerative colitis,female,16.67,ileum
+SRR1782986,ulcerative colitis,male,17.08,ileum
+SRR1782987,Crohn's disease,male,15.33,ileum
+SRR1782988,Crohn's disease,male,10.83,ileum
+SRR1782989,ulcerative colitis,male,13.58,ileum
+SRR1782990,ulcerative colitis,female,16.33,ileum
+SRR1782991,Crohn's disease,male,11.83,ileum
+SRR1782992,ulcerative colitis,male,15.75,ileum
+SRR1782993,Crohn's disease,female,13.67,ileum
+SRR1782994,Crohn's disease,female,13.17,ileum
+SRR1782995,Crohn's disease,male,13.83,ileum
+SRR1782996,Crohn's disease,male,10.67,ileum
+SRR1782997,Crohn's disease,female,5.42,ileum
+SRR1782998,Crohn's disease,male,11.0,ileum
+SRR1782999,ulcerative colitis,female,14.92,ileum
+SRR1783000,ulcerative colitis,female,16.91,ileum
+SRR1783001,Crohn's disease,male,10.5,ileum
+SRR1783002,ulcerative colitis,female,4.5,ileum
+SRR1783003,ulcerative colitis,male,11.0,ileum
+SRR1783004,Crohn's disease,female,15.75,ileum
+SRR1783005,Crohn's disease,female,9.58,ileum
+SRR1783006,ulcerative colitis,male,14.17,ileum
