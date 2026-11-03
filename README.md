@@ -107,15 +107,10 @@ means. Neither test is a privacy guarantee.
 | `sepsis` | [GSE184900](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184900) | 152 | 27,097 | 4 | `Classification`: SepsisBSI vs No-Sepsis | classification, age, sex |
 | `tcga_luad` | TCGA-LUAD, [cBioPortal PanCancer Atlas](https://www.cbioportal.org/study/summary?id=luad_tcga_pan_can_atlas_2018) | 510 | 19,719 | 10 | `clinical_stage_clean`: I, II, advanced | EGFR, KRAS, stage, age, sex |
 
-dbTwin takes an expression count matrix, sample metadata, and optional anchor columns. Anchors
-are the clinical or biological variables you most want preserved. dbTwin supports 7-10 anchors,
-and these cohorts use 3-5. We grade only anchored endpoints.
+dbTwin is a proprietary ML-based generator adapted to clinico-transcriptomic data that operates directly on full-transcriptome expression and clinical metadata tables. It optionally takes up to 8 anchor columns, the clinically or translationally important variables of greatest interest to the analyst, on which it prioritizes downstream fidelity.
 
 Each cohort has one full synthetic dataset, the same size and columns as the real cohort. It
-also has five training-fold datasets, each generated from one real training split only. Use
-the full file for the clinical, co-expression, UMAP, and DE comparisons. Use each fold file
-against its matching held-out real split for TSTR, SHAP, and privacy. Splits 0–4 in
-`real_data/split_manifest.csv` correspond to fold files 1–5.
+also has five training-fold datasets, each generated from one real training split only. The full synthetic files are used for clinical, co-expression, UMAP, and DE comparisons. While synthetic folds are used against its matching held-out real split for TSTR, SHAP, and privacy. Splits 0–4 in `real_data/split_manifest.csv` correspond to fold files 1–5.
 
 > [!NOTE]
 > Don't pool the five fold files into one cohort. Each is a separate synthetic version of a
