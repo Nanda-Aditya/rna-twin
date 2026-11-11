@@ -82,11 +82,12 @@
     "name": "RISK pediatric IBD cohort (GSE57945)",
     "ml_target": "sample_disease",
     "real_samples": "322",
-    "genes": "43790",
+    "genes": "43,790",
     "clinical_vars": "4",
     "splits": "5",
     "train_samples": "257-258",
     "test_samples": "64-65",
+    "excluded_samples": 0,
     "synthetic_samples": "257-258",
     "classes": "Crohn's disease, cntrl, ulcerative colitis",
     "n_genes_de": "43,790",
@@ -96,8 +97,17 @@
     "n_genes_aux": "100",
     "n_genes_secret": "100",
     "anchor_cols": "sample_disease, Sample Characteristic[age at diagnosis years], Sample Characteristic[sex]",
-    "qi_cols": "Sample Characteristic[age at diagnosis years], Sample Characteristic[sex]",
-    "clinical_secrets": "sample_disease, Sample Characteristic[organism part]"
+    "qi_cols": [
+      "Sample Characteristic[age at diagnosis years]",
+      "Sample Characteristic[sex]"
+    ],
+    "clinical_secrets": [
+      "sample_disease",
+      "Sample Characteristic[organism part]"
+    ],
+    "constant_secrets": [
+      "Sample Characteristic[organism part]"
+    ]
   },
   "anchor_cols": [
     "sample_disease",
@@ -353,7 +363,7 @@
     }
   ],
   "provenance": {
-    "date": "2026-11-03",
+    "date": "2026-11-11",
     "pipeline": "rna-twin 0.1.0",
     "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
   },
@@ -398,6 +408,7 @@
         "path": "/datasets/pediatric_risk/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
       }
     ],
+    "clinical_fidelity_total": 2,
     "gene_counts": [
       "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_0.pdf",
       "/datasets/pediatric_risk/dbTwin/artifacts/figs/gene_counts_1.pdf"

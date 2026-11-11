@@ -82,11 +82,12 @@
     "name": "Sepsis cohort",
     "ml_target": "Classification",
     "real_samples": "152",
-    "genes": "27097",
+    "genes": "27,097",
     "clinical_vars": "4",
     "splits": "5",
     "train_samples": "121-122",
     "test_samples": "30-31",
+    "excluded_samples": 0,
     "synthetic_samples": "121-122",
     "classes": "No-Sepsis, SepsisBSI",
     "n_genes_de": "27,097",
@@ -96,8 +97,15 @@
     "n_genes_aux": "100",
     "n_genes_secret": "100",
     "anchor_cols": "Classification, age, sex",
-    "qi_cols": "age, sex",
-    "clinical_secrets": "ethnicity, Classification"
+    "qi_cols": [
+      "age",
+      "sex"
+    ],
+    "clinical_secrets": [
+      "ethnicity",
+      "Classification"
+    ],
+    "constant_secrets": []
   },
   "anchor_cols": [
     "Classification",
@@ -260,7 +268,7 @@
     }
   ],
   "provenance": {
-    "date": "2026-11-03",
+    "date": "2026-11-11",
     "pipeline": "rna-twin 0.1.0",
     "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
   },
@@ -304,6 +312,7 @@
         "path": "/datasets/sepsis/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
       }
     ],
+    "clinical_fidelity_total": 2,
     "gene_counts": [
       "/datasets/sepsis/dbTwin/artifacts/figs/gene_counts_0.pdf"
     ],

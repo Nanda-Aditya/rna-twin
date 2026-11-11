@@ -39,6 +39,11 @@
   item.contrast
 }
 #let shap-results = data.shap_results
+#let and-list(items) = if items.len() == 0 [none] else { items.map(raw).join(", ", last: " and ") }
+#let de-example = if de-contrasts.len() > 0 {
+  let (case, reference) = de-contrasts.at(0).categories.map(str)
+  [e.g. higher in #case for "#case vs #reference"]
+}
 #let table-caption(number, caption) = {
   text(size: 8.5pt)[*Table #number.* #caption]
   v(4pt)
@@ -123,7 +128,7 @@ This report evaluates the quality of the synthetic cohort created from the sourc
   (near or above 1 = no excess proximity to training records); attribute-inference results are in Table 5.
 ]
 
-dbTwin needs two required inputs (expression.csv and metadata.csv) and, optionally, a list of anchor columns (#raw("anchor_cols")), a user-specified set of translationally meaningful columns that the scientist is interested in. dbTwin supports 7–10 anchor columns for most datasets. Almost all ML and DE analyses on anchor columns produce high-fidelity concordance with real data; columns not explicitly declared as anchor columns produce moderate fidelity.
+dbTwin needs two required inputs (expression.csv and metadata.csv) and, optionally, a list of anchor columns (#raw("anchor_cols")), a user-specified set of translationally meaningful columns that the scientist is interested in. dbTwin accepts up to eight anchor columns, enough for the variables of most translational questions. Almost all ML and DE analyses on anchor columns produce high-fidelity concordance with real data; columns not explicitly declared as anchor columns produce moderate fidelity.
 
 #v(4pt)
 #table-caption(1, [Source cohort (#(cohort.name)) used to generate the synthetic data, and the evaluation design. Files: Table 7.])
@@ -137,7 +142,7 @@ dbTwin needs two required inputs (expression.csv and metadata.csv) and, optional
     ("ML target (classes)", [#raw(ml-target) (#(cohort.classes))]),
     ("DE contrasts", de-contrasts.map(de-name).join("; ")),
     ("DE genes", [#(cohort.de_genes_tested) tested; #(cohort.de_genes_reported) in the top 80% by mean expression, used in DE tables and figures]),
-    ("Outer folds", [#(cohort.splits) (#(cohort.train_samples) real training, #(cohort.test_samples) held-out real samples each)]),
+    ("Outer folds", [#(cohort.splits) (#(cohort.train_samples) real training, #(cohort.test_samples) held-out real samples each#if cohort.excluded_samples > 0 [; #cohort.excluded_samples samples with a missing ML target are in the full release only])]),
     ("Synthetic samples per fold", cohort.synthetic_samples),
   ),
   column-widths: (auto, auto), width: auto, inset: 3.5pt,
@@ -149,7 +154,7 @@ two attribute-inference attacks (see Results, Table 5).
 
 #v(6pt)
 #block(breakable: false)[
-#table-caption(2, [Summary of benchmark measures with pass/fail against fixed thresholds (see FAQs). DE, UMAP, and co-expression compare the full release with the full real cohort it was generated from (in-sample). Other values are mean ± SD across outer splits on held-out real samples; SHAP uses valid splits. TRTR is the real-data reference and is not graded. DE gene recall uses the relaxed synthetic threshold (padj < 0.075, |log2FC| > 0.4). Non-anchor columns are omitted (see Bottom line). Privacy results are reported in Table 5.])
+#table-caption(2, [Summary of benchmark measures with pass/fail against fixed thresholds (see FAQs). DE, UMAP, and co-expression compare the full release with the full real cohort it was generated from (in-sample). Other values are mean ± SD across outer splits on held-out real samples; SHAP uses valid splits. TRTR is the real-data reference and is not graded. DE gene recall uses the relaxed synthetic threshold (padj < 0.075, |log2FC| > 0.4). #if ungraded-de.len() > 0 [Non-anchor columns are omitted (see Bottom line). ]Privacy results are reported in Table 5.])
 #summary-table(summary-groups)
 ]
 
@@ -163,10 +168,14 @@ use real samples held out from generation.
 
 == Clinical fidelity
 
-#for panel in figures.clinical_fidelity {
+#let panels = figures.clinical_fidelity.enumerate().map(((i, panel)) => (
+  label: "ABCDEFGH".at(i), ..panel))
+#if panels.len() > 0 {
   figure(
-    image(panel.path, width: 75%),
-    caption: [*Clinical fidelity of the synthetic cohort.* Panels compare full real and dbTwin synthetic distributions of #raw(panel.variable), conditioned on ML-target class.],
+    stack(spacing: 8pt, ..panels.map(panel => grid(
+      columns: (auto, 1fr), align: (left + top, center + top),
+      [*#panel.label*], image(panel.path, width: 85%)))),
+    caption: [*Clinical fidelity of anchor columns within ML-target classes.* Full real versus full dbTwin synthetic distributions, one panel per target class: #panels.map(panel => [(#panel.label) #raw(panel.variable)]).join("; ")#if panels.len() < figures.clinical_fidelity_total [ (#panels.len() of #figures.clinical_fidelity_total non-target anchor columns shown; TVD for all is in #raw("artifacts/clinical_fidelity_metrics.csv"))]. Continuous columns are violins with box plots (median, IQR, whiskers to 1.5 IQR); categorical columns are level prevalences, with missing values as their own level. Panel titles give the total variation distance (TVD; 0 = identical, 1 = no overlap), using 10 equal-width bins on the real class for continuous columns. Even a perfect generator gives non-zero TVD, so each title also gives the sampling noise: the 97.5th percentile of TVD between the real class and 500 same-size bootstrap resamples of itself. "within noise: yes" means the observed TVD is no larger than that.],
   )
 }
 
@@ -207,7 +216,7 @@ real DE genes. Synthetic DE genes use two thresholds:
 
 #v(8pt)
 #block(breakable: false)[
-#table-caption(3, [Differential-expression agreement and DE gene counts in the full cohorts. log2FC is the first-named group relative to the second, so a positive value means higher expression in the first-named group (e.g. higher in 0 for "0 vs 1"). Real DE genes have adjusted p-value below 0.05 and |log2FC| above 0.5. log2FC r and slope are the Pearson correlation and least-squares slope of synthetic on real log2FC over all real DE genes; a slope below 1 means synthetic effects are shrunk toward zero. Synthetic DE genes use the strict or relaxed thresholds below. Recall counts real DE genes that are also synthetic DE genes, with the percentage of real DE genes recalled in brackets. Total counts all synthetic DE genes; Precision is the recalled count divided by Total. Per-gene results are in the CSV files listed in Table 7.])
+#table-caption(3, [Differential-expression agreement and DE gene counts in the full cohorts. log2FC is the first-named group relative to the second, so a positive value means higher expression in the first-named group (#de-example). Real DE genes have adjusted p-value below 0.05 and |log2FC| above 0.5. log2FC r and slope are the Pearson correlation and least-squares slope of synthetic on real log2FC over all real DE genes; a slope below 1 means synthetic effects are shrunk toward zero. Synthetic DE genes use the strict or relaxed thresholds below. Recall counts real DE genes that are also synthetic DE genes, with the percentage of real DE genes recalled in brackets. Total counts all synthetic DE genes; Precision is the recalled count divided by Total. Per-gene results are in the CSV files listed in Table 7.])
 #{
   set text(size: 8.5pt)
   set par(justify: false)
@@ -227,6 +236,7 @@ real DE genes. Synthetic DE genes use two thresholds:
       table.hline(stroke: rule),
     ),
     ..de-results.enumerate().map(((i, item)) => (
+      ..(if i > 0 { (table.hline(stroke: rule),) } else { () }),
       table.cell(rowspan: 3)[#feature-label(de-name(de-contrasts.at(i)), de-contrasts.at(i).column) \ #text(size: 7pt)[positive = higher in #item.case]],
       table.cell(rowspan: 3)[*#item.lfc.estimate*],
       table.cell(rowspan: 3)[*#item.slope.estimate*],
@@ -255,7 +265,7 @@ gene are saved as one CSV per contrast (Table 7).
 #if figures.differential_expression.len() > 0 {
   figure(
     panel-grid(figures.differential_expression.map(path => image(path, width: 100%))),
-    caption: [*Effect-size concordance of differential expression in the full cohorts.* One panel per contrast, in the order of Table 3. DESeq2 was fitted separately to the full real and synthetic cohorts on #if cohort.de_all_genes [all #(cohort.de_genes_tested) genes] else [the #(cohort.de_genes_tested) most variable genes]; the #(cohort.de_genes_reported) genes in the top 80% by real mean CPM are shown. Each point is a real DE gene (real padj < 0.05 and |log2FC| > 0.5) at its real (x) and synthetic (y) log2 fold change, first-named group relative to the second (positive = higher in the first-named group, e.g. higher in 0 for "0 vs 1"). Dashed line, identity: points on it mean real effects are reproduced in direction and size. Solid line, least-squares fit; its slope (subtitle) below 1 means synthetic effects are shrunk toward zero. Subtitles give Pearson r (at least 0.8 passes) and the slope. Non-anchor feature marks a column not supplied to dbTwin as an anchor.],
+    caption: [*Effect-size concordance of differential expression in the full cohorts.* One panel per contrast, in the order of Table 3. DESeq2 was fitted separately to the full real and synthetic cohorts on #if cohort.de_all_genes [all #(cohort.de_genes_tested) genes;] else [the #(cohort.de_genes_tested) most variable genes;] the #(cohort.de_genes_reported) genes in the top 80% by real mean CPM are shown. Each point is a real DE gene (real padj < 0.05 and |log2FC| > 0.5) at its real (x) and synthetic (y) log2 fold change, first-named group relative to the second (positive = higher in the first-named group, #de-example). Dashed line, identity: points on it mean real effects are reproduced in direction and size. Solid line, least-squares fit; its slope (subtitle) below 1 means synthetic effects are shrunk toward zero. Subtitles give Pearson r (at least 0.8 passes) and the slope. Non-anchor feature marks a column not supplied to dbTwin as an anchor.],
   )
 }
 
@@ -292,8 +302,8 @@ synthetic-trained classifiers, with both explanations evaluated on held-out
 real samples. Correlations were computed for the 50 genes with the largest
 real-trained mean absolute SHAP values. Class-specific results are reported
 below because averaging across classes can obscure minority-class failures.
-Synthetic SHAP signal was absent in #data.shap_failed_folds of #data.shap_total_folds
-outer folds despite variable real SHAP signal.
+#if data.shap_failed_folds == 0 [Synthetic SHAP signal was present in all #data.shap_total_folds outer folds.] else [Synthetic SHAP
+signal was absent in #data.shap_failed_folds of #data.shap_total_folds outer folds despite variable real SHAP signal.]
 
 #v(8pt)
 #block(breakable: false, width: 100%)[
@@ -350,19 +360,19 @@ this is an empirical memorization check, not a privacy guarantee.
 
 Attribute inference addresses a different threat model: the attacker has the synthetic data and some features of a real patient, called auxiliary columns, and tries to guess that patient's unknown features, called secrets. To separate leakage from genuine population-level biology, the same attack is repeated against held-out real patients who were not used for generation (the control). Attribute inference is a concern when the training attack success rate is substantially higher than the control success rate.
 
-We tested two threat models. In the first, the attacker knows only the clinical quasi-identifiers (#raw(cohort.qi_cols)); in the second, the attacker also knows the top #(cohort.n_genes_aux) most variable genes, ranked by variance of log2(CPM + 1). In both attacks the secrets are the remaining clinical columns and the next #(cohort.n_genes_secret) most variable genes, and each secret column was attacked independently. The reported statistic is training minus control attack success [2], averaged across all available secret-by-split evaluations. All attribute inference attacks were implemented using the Anonymeter package [3].
+We tested two threat models. In the first, the attacker knows only the clinical quasi-identifiers (#and-list(cohort.qi_cols)); in the second, the attacker also knows the top #(cohort.n_genes_aux) most variable genes, ranked by variance of log2(CPM + 1). In both attacks the secrets are the remaining clinical columns and the next #(cohort.n_genes_secret) most variable genes, and each secret column was attacked independently. The reported statistic is training minus control attack success [2], averaged across splits per secret column, then summarized as the median of the 10 highest column means for each attack. All attribute inference attacks were implemented using the Anonymeter package [3].
 
 #v(8pt)
 #block(breakable: false, width: 100%)[
-#table-caption(5, [Summary of privacy measures; mean ± SD across outer splits or attribute-inference evaluations.])
+#table-caption(5, [Summary of privacy measures; DCR: mean ± SD across splits; attribute inference: median of the top 10 column means across splits.])
 #report-table(
-  ("Metric", "Estimate"),
+  ("Metric", "Estimate", [Features with mean \ excess > 0.2]),
   (
-    ("DCR 5th percentile ratio", metric("privacy_p5_ratio").estimate),
-    ("Attribute inference: expression + clinical", metric("attribute_inference_standard").estimate),
-    ("Attribute inference: clinical only", metric("attribute_inference_clinical_qi").estimate),
+    ("DCR 5th percentile ratio", metric("privacy_p5_ratio").estimate, "--"),
+    ([Clinical QI + #(cohort.n_genes_aux) genes \ median of top 10 means], metric("attribute_inference_standard").estimate, metric("attribute_inference_standard_columns_gt_02").estimate),
+    ([Clinical QI only \ median of top 10 means], metric("attribute_inference_clinical_qi").estimate, metric("attribute_inference_clinical_qi_columns_gt_02").estimate),
   ),
-  column-widths: (auto, auto), width: auto,
+  column-widths: (auto, auto, auto), width: auto,
 )
 ]
 
@@ -387,7 +397,7 @@ behind the largest excesses.
 #if figures.privacy != none {
   figure(
     image(figures.privacy, width: 100%),
-    caption: [*Empirical privacy tests.* (A) Distance to closest record (DCR), pooled over outer splits: each synthetic record to its nearest real training record (left) versus each training record to its nearest other training record (right), on standardized log2(CPM + 1) expression. Copied or lightly perturbed records would pull the left violin toward zero; the annotation gives the 5th-percentile ratio (mean ± SD across splits), where values near or above 1 show no excess proximity. (B) Attribute inference (Anonymeter): an attacker who knows #raw(cohort.qi_cols) alone, or these plus #(cohort.n_genes_aux) expression genes, infers a withheld clinical or gene secret from the closest synthetic record. The y-axis is success on training patients minus success on held-out patients, isolating what the synthetic data reveals about the individuals used to build it. The seven secrets with the highest mean excess are shown; boxes span splits, dots are splits, and the axis starts at 0.],
+    caption: [*Empirical privacy tests.* (A) Distance to closest record (DCR), pooled over outer splits: each synthetic record to its nearest real training record (left) versus each training record to its nearest other training record (right), on standardized log2(CPM + 1) expression. Copied or lightly perturbed records would pull the left violin toward zero; the annotation gives the 5th-percentile ratio (mean ± SD across splits), where values near or above 1 show no excess proximity. (B) Attribute inference (Anonymeter): an attacker who knows #and-list(cohort.qi_cols) alone, or these plus #(cohort.n_genes_aux) expression genes, infers a withheld clinical or gene secret from the closest synthetic record. The y-axis is success on training patients minus success on held-out patients, isolating what the synthetic data reveals about the individuals used to build it. The seven secrets with the highest mean excess over both attacks and all splits are shown (Table 6 ranks each attack separately); boxes span splits, dots are splits, and the axis starts at 0.],
   )
 }
 
@@ -406,6 +416,8 @@ at the relaxed synthetic threshold: padj < 0.075 and |log2FC| > 0.4) at least 80
 least 0.8.
 Non-anchor columns are exempt from the thresholds and are omitted from Table 2; their
 DE contrasts are listed as not graded in the Bottom line.
+
+*What does TVD mean in the clinical fidelity figure?* TVD is the fraction of probability mass that differs between real and synthetic distributions (0 = identical, 1 = disjoint). Numeric columns are binned using fixed-width bins defined on the real cohort. Small classes give non-zero TVD from sampling alone, so judge each value against the sampling-noise bound in its panel title.
 
 *How do I interpret the co-expression matrix?* Real gene--gene correlations
 are shown below the diagonal and synthetic correlations above it, in the same
@@ -452,13 +464,14 @@ followed by confirmation on governed real data (see Limitations).
 
 = Methods
 
-Clinical fidelity, differential expression, UMAP, and co-expression are evaluated once using the full real and synthetic cohorts. These comparisons are in-sample: the full synthetic release was generated from every real sample, and it is compared against those same samples. Predictive ML accuracy, SHAP concordance, DCR and attribute inference are evaluated using a 5-fold train-test split with synthetic datasets generated only from the training folds, so ML accuracy, SHAP and the control arm of attribute inference use real samples held out from generation. All synthetic folds are saved in #raw("datasets/<data-folder>/dbTwin/artifacts/") and only used the training folds as delineated in the split_manifest. 
+Clinical fidelity, differential expression, UMAP, and co-expression are evaluated once using the full real and synthetic cohorts. These comparisons are in-sample: the full synthetic release was generated from every real sample, and it is compared against those same samples. Predictive ML accuracy, SHAP concordance, DCR and attribute inference are evaluated using a 5-fold train-test split with synthetic datasets generated only from the training folds, so ML accuracy, SHAP and the control arm of attribute inference use real samples held out from generation. The fold-specific synthetic cohorts are saved in #raw(data.data_files.root + "/artifacts/"), each generated only from the training samples of its fold in #raw("split_manifest.csv"). 
 
-All real data is stored in #raw("datasets/<data-folder>/real_data").
+All real data is stored in #raw("datasets/" + data.data_files.cohort + "/real_data/").
 
 == Global and clinical fidelity
 
 Clinical anchor-column distributions were compared within ML-target classes
+using total variation distance (TVD)
 in the full real and synthetic cohorts. As a sampling-noise reference, each real class
 was compared with 500 bootstrap resamples of itself, each the size of the matching
 synthetic class; an observed TVD at or below the 97.5th percentile of these values is
@@ -490,6 +503,7 @@ contrast's specified clinical column as the design factor. As in R DESeq2, count
 as outliers by Cook's distance were replaced and those genes refit (levels with at least
 seven samples); log2 fold-changes were not shrunk.
 Adjusted p-values and log2 fold-changes were aligned by gene.
+DE was run on all subjects, but only the top 80% of genes with the highest mean CPM in the real cohort (#(cohort.de_genes_reported) of #(cohort.de_genes_tested) tested genes) were considered in the figures and tables.
 Real DE genes were those with adjusted p-value below 0.05 and |log2FC| above
 0.5 in the real cohort; the Pearson correlation and least-squares slope of
 synthetic on real log2 fold-change used all of them. log2 fold-changes are the
@@ -546,15 +560,15 @@ subsampling were not used in this DCR calculation.
 
 Attribute inference used Anonymeter's inference evaluator at 95% confidence,
 with one attack per held-out subject. The configured clinical
-quasi-identifiers were #raw(cohort.qi_cols). Eligible clinical secrets were
-#raw(cohort.clinical_secrets). Genes were ranked by log2(CPM + 1) variance in each
+quasi-identifiers were #and-list(cohort.qi_cols). Eligible clinical secrets were
+#and-list(cohort.clinical_secrets)#if cohort.constant_secrets.len() > 0 [ (#and-list(cohort.constant_secrets) is constant in the real cohort, so its excess is zero by construction)]. Genes were ranked by log2(CPM + 1) variance in each
 fold's synthetic cohort. Gene secrets were the next #(cohort.n_genes_secret) ranked
 genes after the #(cohort.n_genes_aux) auxiliary genes, with no overlap, and kept their
-released raw counts. The expression-assisted attack used the auxiliary genes as
+released, untransformed values. The expression-assisted attack used the auxiliary genes as
 log2(CPM + 1) standardized with real training statistics; the second attack used
 clinical quasi-identifiers alone. The
 reported excess success is the training attack rate minus the control attack
-rate, averaged over available secret-by-split evaluations for each attack. This
+rate, averaged across splits per secret column, then summarized as the median of the 10 highest column means for each attack. This
 is distinct from Anonymeter's normalized inference-risk estimator.
 
 = Data files and layout
@@ -638,7 +652,7 @@ regulatory, or other high-stakes settings.
 
 [1] Nanda A, Saha S. rna-twin: synthetic bulk RNA-seq cohorts and benchmark (2026). #link("https://github.com/Nanda-Aditya/rna-twin")
 
-[2] Pilgram L, Dankar FK, Drechsler J, Elliot M, Domingo-Ferrer J, Francis P, Kantarcioglu M, Kong L, Malin B, Muralidhar K, Myles P, Prasser F, Raisaro JL, Yan C, El Emam K. A consensus privacy metrics framework for synthetic data.
+[2] Pilgram L, Dankar FK, Drechsler J, Elliot M, Domingo-Ferrer J, Francis P, Kantarcioglu M, Kong L, Malin B, Muralidhar K, Myles P, Prasser F, Raisaro JL, Yan C, El Emam K. A consensus privacy metrics framework for synthetic data. _Patterns_ 2025;6(10):101320. #link("https://doi.org/10.1016/j.patter.2025.101320")
 
 [3] Giomi M, Boenisch F, Wehmeyer C, Tasnádi B. A unified framework for quantifying privacy risk in synthetic data. _Proceedings on Privacy Enhancing Technologies_ 2023(2). #link("https://petsymposium.org/popets/2023/popets-2023-0055.php")
 

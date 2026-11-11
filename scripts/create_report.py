@@ -288,16 +288,18 @@ data_files["de_files"] = de_files
 report_data = {
     "metrics": {name: _metric(name) for name in metric_names} | privacy_metrics,
     "cohort": {
-        "name": args.cohort_name or args.input_dir.name,
+        "name": args.cohort_name or dataset_name,
         "ml_target": target,
-        "real_samples": str(len(expression)),
-        "genes": str(len(expression.columns)),
+        "real_samples": f"{len(expression):,}",
+        "genes": f"{len(expression.columns):,}",
         "clinical_vars": str(len(clinical.columns)),
         "splits": str(len(train_sizes)),
         "train_samples": _range(train_sizes),
         "test_samples": _range(test_sizes),
+        # Samples outside the fold design (missing ML target) are in the full release only.
+        "excluded_samples": len(expression) - manifest["sample_id"].nunique(),
         "synthetic_samples": _range([len(values) for values in synthetic_targets]),
-        "classes": ", ".join(map(str, clinical[target].dropna().unique())),
+        "classes": ", ".join(class_labels),
         "n_genes_de": f'{gene_counts["n_genes_de"]:,}',
         "de_genes_tested": f"{len(de_genes):,}",
         "de_genes_reported": f"{int(gene_mask.sum()):,}",
@@ -305,8 +307,10 @@ report_data = {
         "n_genes_aux": str(n_genes_aux),
         "n_genes_secret": str(n_genes_secret),
         "anchor_cols": ", ".join(anchor_cols),
-        "qi_cols": ", ".join(qi_cols) or "none",
-        "clinical_secrets": ", ".join(clinical_secrets) or "none",
+        "qi_cols": qi_cols,
+        "clinical_secrets": clinical_secrets,
+        "constant_secrets": [column for column in clinical_secrets
+                             if clinical[column].nunique(dropna=False) == 1],
     },
     "anchor_cols": anchor_cols,
     "figure_columns": {
@@ -338,6 +342,7 @@ report_data = {
             for index, column in enumerate(
                 column for column in anchor_cols if column != target)
             if (fig_dir / f"clinical_fidelity{index}.pdf").is_file()][:2],
+        "clinical_fidelity_total": sum(column != target for column in anchor_cols),
         "gene_counts": [
             _template_path(path) for path in (
                 fig_dir / f"gene_counts_{index}.pdf" for index in range(len(contrasts))
@@ -362,85 +367,8 @@ report_data = {
 
 data_path = artifact_dir / "report_data.json"
 data_path.write_text(json.dumps(report_data, indent=2), encoding="utf-8")
-
-
-# Adjust the privacy presentation without changing the shared template file.
-report_source = template.read_text(encoding="utf-8").replace(
-    '..de-results.enumerate().map(((i, item)) => (',
-    '..de-results.enumerate().map(((i, item)) => ('
-    '\n      ..(if i > 0 { (table.hline(stroke: rule),) } else { () }),')
-for old, new in (
-    ('Adjusted p-values and log2 fold-changes were aligned by gene.\n',
-     'Adjusted p-values and log2 fold-changes were aligned by gene.\n'
-     'DE was run on all subjects, but only the top 80% of genes with the highest mean '
-     'CPM in the real cohort (#(cohort.de_genes_reported) of #(cohort.de_genes_tested) '
-     'tested genes) were considered in the figures and tables.\n'),
-    ('"styles.typ"', json.dumps(_template_path(template.with_name("styles.typ")))),
-    ('#for panel in figures.clinical_fidelity {\n  figure(\n    image(panel.path, width: 75%),\n'
-     '    caption: [*Clinical fidelity of the synthetic cohort.* Panels compare full real and dbTwin '
-     'synthetic distributions of #raw(panel.variable), conditioned on ML-target class.],\n  )\n}',
-     '#let panels = figures.clinical_fidelity.enumerate().map(((i, panel)) => (\n'
-     '  label: "ABCDEFGH".at(i), ..panel))\n'
-     '#if panels.len() > 0 {\n  figure(\n'
-     '    stack(spacing: 8pt, ..panels.map(panel => grid(\n'
-     '      columns: (auto, 1fr), align: (left + top, center + top),\n'
-     '      [*#panel.label*], image(panel.path, width: 85%)))),\n'
-     '    caption: [*Clinical fidelity of anchor columns within ML-target classes.* Full real '
-     'versus full dbTwin synthetic distributions, one panel per target class: '
-     '#panels.map(panel => [(#panel.label) #raw(panel.variable)]).join("; "). '
-     'Continuous columns are violins with box plots (median, IQR, whiskers to 1.5 IQR); '
-     'categorical columns are level prevalences, with missing values as their own level. Panel '
-     'titles give the total variation distance (TVD; 0 = identical, 1 = no overlap), using 10 '
-     'equal-width bins on the real class for continuous columns. Even a perfect generator gives '
-     'non-zero TVD, so each title also gives the sampling noise: the 97.5th percentile of TVD '
-     'between the real class and 500 same-size bootstrap resamples of itself. "within noise: yes" '
-     'means the observed TVD is no larger than that.],\n  )\n}'),
-    ('Clinical anchor-column distributions were compared within ML-target classes\n',
-     'Clinical anchor-column distributions were compared within ML-target classes\n'
-     'using total variation distance (TVD)\n'),
-    ('*How do I interpret the co-expression matrix?*',
-     '*What does TVD mean in the clinical fidelity figure?* TVD is the fraction of probability '
-     'mass that differs between real and synthetic distributions (0 = identical, 1 = disjoint). '
-     'Numeric columns are binned using fixed-width bins defined on the real cohort. Small '
-     'classes give non-zero TVD from sampling alone, so judge each value against the '
-     'sampling-noise bound in its panel title.\n\n'
-     '*How do I interpret the co-expression matrix?*'),
-    (' and the median-distance ratio\nwas #metric("privacy_median_ratio").estimate', ''),
-    ('    ("DCR median ratio", metric("privacy_median_ratio").estimate),\n', ''),
-    ('mean ± SD across outer splits or attribute-inference evaluations.',
-     'DCR: mean ± SD across splits; attribute inference: median of the top 10 column means across splits.'),
-    ('"Attribute inference: expression + clinical"',
-     '[#(cohort.n_genes_aux) expression genes + QI \\ median of top 10 means]'),
-    ('"Attribute inference: clinical only"', '[Clinical QI \\ median of top 10 means]'),
-    ('averaged across all available secret-by-split evaluations',
-     'averaged across splits per secret column, then summarized as the median of the 10 highest column means for each attack'),
-    ('Excess attribute-inference success aggregated across all evaluated secrets and splits.',
-     'Median of the 10 highest per-column mean excess-success values across splits for each attack.'),
-    ('"Training - control success"', '"Median of top 10 means"'),
-    ('the fifth-percentile and median\nsynthetic-to-training distances',
-     'the fifth-percentile\nsynthetic-to-training distances'),
-    ('rate, averaged over available secret-by-split evaluations for each attack.',
-     'rate, averaged across splits per secret column, then summarized as the median of the 10 highest column means for each attack.')):
-    report_source = report_source.replace(old, new)
-privacy_start = report_source.index('#table-caption(5,')
-privacy_end = report_source.index('#if figures.privacy', privacy_start)
-privacy_table = report_source[privacy_start:privacy_end].replace(
-    '("Metric", "Estimate"),',
-    '("Metric", "Estimate", [Features with mean \\ excess > 0.2]),').replace(
-    'metric("privacy_p5_ratio").estimate),',
-    'metric("privacy_p5_ratio").estimate, "--"),').replace(
-    'column-widths: (auto, auto), width: auto',
-    'column-widths: (auto, auto, auto), width: auto')
-for attack in ("standard", "clinical_qi"):
-    count_metric = f'metric("attribute_inference_{attack}_columns_gt_02").estimate'
-    privacy_table = privacy_table.replace(
-        f'metric("attribute_inference_{attack}").estimate),',
-        f'metric("attribute_inference_{attack}").estimate, {count_metric}),')
-report_source = (
-    report_source[:privacy_start] + privacy_table + report_source[privacy_end:])
-
 typst.compile(
-    report_source.encode("utf-8"),
+    str(template),
     output=str(args.output_dir / f"benchmark_report_{dataset_name}.pdf"),
     root=str(typst_root),
     sys_inputs={"data": _template_path(data_path)},

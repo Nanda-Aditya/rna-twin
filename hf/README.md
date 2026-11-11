@@ -93,15 +93,19 @@ configs:
 
 # rna-twin
 
-Synthetic bulk RNA-seq cohorts with linked clinical variables for three public studies:
-pediatric IBD (RISK, GSE57945), sepsis (GSE184900), and TCGA lung adenocarcinoma. We made them
-with [dbTwin](https://dbtwin.com). Each cohort has one full synthetic dataset, five
-training-fold datasets, and a PDF report comparing the synthetic data with the real data.
+Synthetic bulk RNA-seq cohorts with linked clinical data, each released with a benchmark report
+that shows what it preserves.
+
+This dataset holds synthetic versions of three public cohorts: pediatric inflammatory bowel
+disease (RISK, GSE57945), sepsis (GSE184900), and TCGA lung adenocarcinoma. Every synthetic
+sample has full-transcriptome expression and clinical variables, generated with
+[dbTwin](https://dbtwin.com). For each cohort you get one full synthetic cohort, five
+training-fold cohorts, and a PDF report comparing the synthetic data with the real data.
 
 ![Sepsis: joint real/synthetic UMAP and gene co-expression](assets/qa_preview.png)
 
-*Sepsis. (A) Real and synthetic samples in one UMAP fit. (B) Gene-gene correlations for the
-500 most variable genes: real below the diagonal, synthetic above.*
+*Sepsis cohort. (A) Real and synthetic samples embedded in a single UMAP fit. (B) Correlations
+among the 500 most variable genes, real below the diagonal and synthetic above.*
 
 [Benchmark code](https://github.com/Nanda-Aditya/rna-twin) ·
 Preprint (forthcoming) <!-- TODO: link the companion preprint DOI once it is assigned. --> ·
@@ -110,8 +114,11 @@ Preprint (forthcoming) <!-- TODO: link the companion preprint DOI once it is ass
 
 ## Get the data
 
-1. Log in, read the [Data Use Agreement](#license-and-data-use-agreement) at the end of this
-   page, and click **Agree and access**.
+Anyone can download the files after accepting the
+[Data Use Agreement](#license-and-data-use-agreement). In short: noncommercial use only, and no
+reverse engineering of the generator.
+
+1. Log in to Hugging Face, fill in the access form on this page, and click **Agree and access**.
 2. Log in from the terminal with the same account: `hf auth login`. If the CLI isn't installed,
    use `uvx --from huggingface-hub hf auth login`.
 3. Load a cohort. Each config (`pediatric_risk`, `sepsis`, `tcga_luad`) has a `full` split and
@@ -137,9 +144,10 @@ path = hf_hub_download("NandaAditya/rna-twin", "sepsis/syn_sepsis.csv",
 df = pd.read_csv(path, index_col=0)
 ```
 
-To rerun the benchmark, clone the [GitHub repo](https://github.com/Nanda-Aditya/rna-twin) and
-run `uv run python get_data.py`. It downloads these files into `datasets/<cohort>/dbTwin/`, and
-then `uv run python scripts/run_pipe.py sepsis` reruns the sepsis benchmark.
+To rerun the benchmark yourself, clone the [GitHub repo](https://github.com/Nanda-Aditya/rna-twin)
+and run `uv run python get_data.py`. It walks you through the login and agreement steps and
+downloads these files into `datasets/<cohort>/dbTwin/`. Then `uv run python scripts/run_pipe.py sepsis`
+reruns the sepsis benchmark.
 
 ## Files
 
@@ -152,17 +160,17 @@ LICENSE                                          CC BY-NC 4.0
 DUA.md                                           Data Use Agreement
 ```
 
-Each `<cohort>/` folder has the same layout as `datasets/<cohort>/dbTwin/` in the benchmark
-repo.
+Each `<cohort>/` folder mirrors `datasets/<cohort>/dbTwin/` in the benchmark repo.
 
-Each row is a synthetic sample. The first, unnamed column is a row index, not a gene or a
-patient ID, so read it with `index_col=0`. The other columns are expression values and
-clinical variables under their source names: Ensembl gene IDs, plus some gene symbols in
+Each row is one synthetic sample. The first, unnamed column is a row index, not a gene or a
+patient ID, so read it with `index_col=0`. The remaining columns are expression values and
+clinical variables under their source names. Genes are Ensembl IDs, plus some gene symbols in
 TCGA-LUAD. Clinical values can be missing. RISK and sepsis expression values are read counts.
-TCGA-LUAD values are integers on the scale of their source, upper-quartile-normalized RSEM
-(each sample's 75th percentile of non-zero genes is about 1,000), so they aren't read counts.
+TCGA-LUAD values are not read counts: they are integers on the scale of the source data,
+upper-quartile-normalized RSEM, where each sample's 75th percentile over non-zero genes is about
+1,000.
 
-| Cohort | Full rows | Fold rows (1-5) | Genes | Clinical columns | Prediction target | Anchors |
+| Cohort | Full rows | Fold rows (1-5) | Genes | Clinical columns | Prediction target | Anchor columns |
 |---|---:|---|---:|---:|---|---|
 | `pediatric_risk` | 322 | 257, 257, 258, 258, 258 | 43,790 | 4 | `sample_disease` | disease, age, sex |
 | `sepsis` | 152 | 121, 121, 122, 122, 122 | 27,097 | 4 | `Classification` | classification, age, sex |
@@ -177,33 +185,49 @@ The clinical columns are:
   `clinical_egfr_mut`, `clinical_kras_mut`, `clinical_alk_mut`, `clinical_tp53_mut`,
   `clinical_stk11_mut`, `clinical_stage_clean`
 
-Use the full file for clinical, co-expression, UMAP, and DE comparisons. Each fold file was
-generated from one real training split only, so compare it with the matching held-out real
-split. The split manifests are in the GitHub repo. Don't pool the five folds into one cohort.
+Which file to use:
+
+- **The full file** is the one to use for analysis. The benchmark uses it for the clinical,
+  co-expression, UMAP, and DE comparisons.
+- **Each fold file** was generated from one real training split only, so compare it only with
+  its matching held-out real split. The split manifests are in the GitHub repo. Don't pool the
+  five folds into one cohort.
 
 ## How the data was made
 
-dbTwin is a proprietary, non-deep-learning generator. It takes a real count matrix, sample
-metadata, and anchor columns, which are the variables you most want preserved. It generates
-synthetic samples with both expression and clinical values. The full cohort was generated
-from all real samples. Each fold dataset was generated from one training split, with the
-held-out patients left out. The generator isn't included here or in the GitHub repo.
+dbTwin is a proprietary generator that does not use deep learning. It takes a real expression
+matrix, the sample metadata, and a optional set of anchor columns, the clinical variables whose
+relationships with expression matter most, and generates synthetic samples with both expression
+and clinical values. The anchor columns for each cohort are listed in the table above. The full
+cohort was generated from all real samples. Each fold cohort was generated from one training
+split, with that split's held-out patients left out. The generator itself is not included here
+or in the GitHub repo.
 
 ## Benchmark results
 
-From the reports in `reports/` (November 2–3, 2026). Values with ± are mean ± SD over five outer
-splits. ✅ marks a pass against the report's fixed thresholds.
+All numbers come from the reports in `reports/`, generated on November 2 and 3, 2026.
+Co-expression, UMAP, and DE compare the full synthetic cohort with the full real cohort once.
+Values with ± are the mean ± SD over five outer splits. ✅ marks a pass against the report's
+fixed thresholds.
 
 | | Pass if | Pediatric RISK | Sepsis | TCGA-LUAD |
 |---|---|---:|---:|---:|
 | Co-expression Spearman ρ | ≥ 0.8 | 0.996 ✅ | 0.965 ✅ | 0.940 ✅ |
 | UMAP MMD | ≤ 0.1 | 0.022 ✅ | 0.037 ✅ | 0.020 ✅ |
-| TRTR ROC-AUC (real reference) | | 0.880 ± 0.032 | 0.894 ± 0.032 | 0.573 ± 0.036 |
-| TSTR ROC-AUC | ≥ TRTR − 0.05 | 0.878 ± 0.035 ✅ | 0.893 ± 0.027 ✅ | 0.573 ± 0.044 ✅ |
+| ROC-AUC, real-trained (TRTR) | reference | 0.880 ± 0.032 | 0.894 ± 0.032 | 0.573 ± 0.036 |
+| ROC-AUC, synthetic-trained (TSTR) | ≥ TRTR − 0.05 | 0.878 ± 0.035 ✅ | 0.893 ± 0.027 ✅ | 0.573 ± 0.044 ✅ |
 | SHAP Pearson r | ≥ 0.8 | 0.949 ± 0.012 ✅ | 0.881 ± 0.043 ✅ | 0.828 ± 0.056 ✅ |
 
-TRTR trains on real data and TSTR on the matching synthetic fold. Both are scored on the same
-held-out real patients.
+TRTR models are trained on real data and TSTR models on the matching synthetic fold. Both are
+scored on the same held-out real patients, whom the generator never saw. Synthetic-trained
+classifiers matched real-trained ones in all three cohorts and relied on the same genes. Tumour
+stage in TCGA-LUAD is hard to predict even from real data, and the synthetic cohort reproduced
+that ceiling rather than inflating it.
+
+**Differential expression.** Real DE genes have padj < 0.05 and |log2FC| > 0.5. Log2FC r and
+slope compare synthetic with real fold changes over all real DE genes; a slope below 1 means
+synthetic effects are shrunk toward zero. Recall is the share of real DE genes that are also
+significant in the synthetic data at a relaxed rule (padj < 0.075, |log2FC| > 0.4).
 
 | Cohort | DE contrast | Real DE genes | log2FC r (≥ 0.8) | Slope | Recall (≥ 80%) |
 |---|---|---:|---:|---:|---:|
@@ -212,33 +236,41 @@ held-out real patients.
 | Sepsis | SepsisBSI vs No-Sepsis | 2,743 | 0.994 ✅ | 1.01 | 97% ✅ |
 | TCGA-LUAD | KRAS, 0 vs 1 | 1,121 | 0.961 ✅ | 0.94 | 92% ✅ |
 | TCGA-LUAD | EGFR, 0 vs 1 | 1,369 | 0.970 ✅ | 0.92 | 93% ✅ |
-| TCGA-LUAD | STK11, 0 vs 1 (not an anchor, not graded) | 2,586 | 0.883 | 0.70 | 69% |
+| TCGA-LUAD | STK11, 0 vs 1 (not an anchor column, not graded) | 2,586 | 0.883 | 0.70 | 69% |
 
-Real DE genes have padj < 0.05 and |log2FC| > 0.5. Recall is the share of them that are also
-significant in the synthetic data (padj < 0.075, |log2FC| > 0.4). STK11 wasn't an anchor, and
-it shows: recall drops to 69% and effects shrink by about 30%.
+Effect sizes kept their real magnitude in every anchored contrast (slope 0.92 to 1.01). STK11 is
+the instructive exception, and the only contrast on a column not declared as an anchor column.
+Its effect sizes still correlated with the real ones (r = 0.88) but shrank by about 30%, and
+recall fell to 69%. Associations with anchor columns are preserved with high fidelity, and
+associations with other columns only partially.
+
+**Privacy.**
 
 | | Pediatric RISK | Sepsis | TCGA-LUAD |
 |---|---:|---:|---:|
 | DCR 5th-percentile ratio | 0.916 ± 0.011 | 1.056 ± 0.035 | 1.047 ± 0.012 |
-| Attribute inference excess, clinical QIs | 0.029 | 0.066 | 0.028 |
-| Attribute inference excess, QIs + 100 genes | 0.094 | 0.112 | 0.143 |
-| Secrets with excess > 0.2 (clinical / + genes) | 0 / 1 | 0 / 0 | 0 / 3 |
+| Excess training success, attacker knows age and sex | 0.029 | 0.066 | 0.028 |
+| Excess training success, attacker also knows 100 genes | 0.094 | 0.112 | 0.143 |
+| Secrets with excess > 0.2 (age and sex / + 100 genes) | 0 / 1 | 0 / 0 | 0 / 3 |
 
-A DCR ratio near 1 means synthetic records are no closer to training patients than training
-patients are to each other. Excess success is an Anonymeter attack's success on training
-patients minus its success on held-out patients, summarized as the median of the 10 highest
-per-secret means.
+DCR checks for memorization. A ratio near 1 means synthetic samples sit no closer to training
+patients than training patients sit to each other. Attribute inference, run with Anonymeter,
+asks whether the synthetic data helps an attacker learn something new about a real training
+patient. Excess training success is the attack's success on training patients minus its success
+on held-out patients, and the two excess rows report the median of the 10 highest per-secret
+means. An attacker who knows only age and sex gains little (0.028 to 0.066); one who also holds
+100 genes measured on the patient's own sample gains more (0.094 to 0.143).
 
 ## Uses and limitations
 
 The data is meant for noncommercial method development, benchmarking, teaching, pipeline
-prototyping, and hypothesis generation. Confirm anything that matters on real data. It isn't
-validated for diagnosis, treatment decisions, or clinical or regulatory evidence.
+prototyping, and hypothesis generation. Confirm anything that matters on real data. The data is
+not validated for diagnosis, treatment decisions, or clinical or regulatory evidence.
 
 The results above cover only the tested targets, contrasts, gene subsets, and classifier. We
-haven't tested survival models, pathway enrichment, or external cohorts. The cohorts are
-small, subgroup estimates can be unstable, and biases in the source studies carry over.
+have not tested survival models, pathway enrichment, or external cohorts. The cohorts are small,
+so subgroup estimates can be unstable, and biases in the source studies carry over into the
+synthetic data.
 
 The records are synthetic and were generated from public, de-identified data. We measured
 disclosure risk with DCR and two attribute-inference attacks. These are empirical tests, not
@@ -247,8 +279,9 @@ differential privacy.
 The real data comes from GEO ([GSE57945](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE57945),
 [GSE184900](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184900)) and TCGA
 ([cBioPortal PanCancer Atlas](https://www.cbioportal.org/study/summary?id=luad_tcga_pan_can_atlas_2018)).
-Its original terms apply, so please cite the original studies. The TCGA results shown here are in whole or part based upon
-data generated by the TCGA Research Network: https://www.cancer.gov/tcga.
+Its original terms still apply, so please also cite the original studies, listed in each
+cohort's `README.md` in the GitHub repo. The TCGA results shown here are in whole or part based
+upon data generated by the TCGA Research Network: https://www.cancer.gov/tcga.
 
 ## Citation
 
@@ -257,19 +290,19 @@ changed:
 
 > rna-twin v1.0.0 © 2026 dbTwin, Inc., CC BY-NC 4.0, https://huggingface.co/datasets/NandaAditya/rna-twin
 
-Please cite the benchmark repository and the dataset:
+Please cite both the benchmark repository and the dataset:
 
 ```bibtex
 @software{nanda2026rnatwin,
   title  = {rna-twin: synthetic bulk RNA-seq cohorts and benchmark},
-  author = {Nanda, Aditya and Saha, Somdutta},
+  author = {Nanda, Aditya},
   year   = {2026},
   url    = {https://github.com/Nanda-Aditya/rna-twin}
 }
 
 @misc{rnatwin2026,
   title     = {rna-twin: synthetic bulk RNA-seq cohorts},
-  author    = {Nanda, Aditya and Saha, Somdutta},
+  author    = {Nanda, Aditya},
   publisher = {Hugging Face},
   year      = {2026},
   version   = {v1.0.0},
@@ -279,10 +312,11 @@ Please cite the benchmark repository and the dataset:
 
 ## Changelog
 
-- **v1.0.0, November 3–4, 2026:** first release. The CSVs are the files the benchmark reports
-  in `reports/` were computed from.
+- **v1.0.0, November 3–4, 2026:** first public release. These CSVs are the exact files the
+  benchmark reports in `reports/` were computed from.
 
-The examples above pin `revision="v1.0.0"`.
+The code examples above pin `revision="v1.0.0"`, so they keep loading this version after later
+releases.
 
 ## License and Data Use Agreement
 

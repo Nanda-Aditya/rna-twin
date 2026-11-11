@@ -82,13 +82,14 @@
     "name": "TCGA lung adenocarcinoma (TCGA-LUAD)",
     "ml_target": "clinical_stage_clean",
     "real_samples": "510",
-    "genes": "19719",
+    "genes": "19,719",
     "clinical_vars": "10",
     "splits": "5",
     "train_samples": "406-407",
     "test_samples": "101-102",
+    "excluded_samples": 2,
     "synthetic_samples": "406-407",
-    "classes": "advanced, I, II",
+    "classes": "I, II, advanced",
     "n_genes_de": "19,719",
     "de_genes_tested": "19,719",
     "de_genes_reported": "15,775",
@@ -96,8 +97,21 @@
     "n_genes_aux": "100",
     "n_genes_secret": "100",
     "anchor_cols": "clinical_egfr_mut, clinical_age, clinical_stage_clean, clinical_kras_mut, clinical_sex",
-    "qi_cols": "clinical_age, clinical_sex",
-    "clinical_secrets": "clinical_os_months, clinical_os_status, clinical_egfr_mut, clinical_kras_mut, clinical_alk_mut, clinical_tp53_mut, clinical_stk11_mut, clinical_stage_clean"
+    "qi_cols": [
+      "clinical_age",
+      "clinical_sex"
+    ],
+    "clinical_secrets": [
+      "clinical_os_months",
+      "clinical_os_status",
+      "clinical_egfr_mut",
+      "clinical_kras_mut",
+      "clinical_alk_mut",
+      "clinical_tp53_mut",
+      "clinical_stk11_mut",
+      "clinical_stage_clean"
+    ],
+    "constant_secrets": []
   },
   "anchor_cols": [
     "clinical_egfr_mut",
@@ -412,7 +426,7 @@
     }
   ],
   "provenance": {
-    "date": "2026-11-03",
+    "date": "2026-11-11",
     "pipeline": "rna-twin 0.1.0",
     "packages": "PyDESeq2 0.5.3, scikit-learn 1.9.1, UMAP 0.5.9.post2, SHAP 0.52.0, Anonymeter 1.1.0"
   },
@@ -467,6 +481,7 @@
         "path": "/datasets/tcga_luad/dbTwin/artifacts/figs/clinical_fidelity1.pdf"
       }
     ],
+    "clinical_fidelity_total": 4,
     "gene_counts": [
       "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_0.pdf",
       "/datasets/tcga_luad/dbTwin/artifacts/figs/gene_counts_1.pdf",
