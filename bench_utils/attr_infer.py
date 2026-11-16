@@ -8,6 +8,7 @@ import pickle
 import subprocess
 import sys
 from tempfile import TemporaryDirectory
+import warnings
 
 
 CONFIDENCE = 0.95
@@ -22,9 +23,13 @@ def in_anonymeter_runtime():
 
 
 def anonymeter_python():
-    """Path of the isolated Anonymeter venv's Python (NumPy 1.x), made by setup_anonymeter.py."""
+    """Path of the isolated Anonymeter venv's Python (NumPy 1.x), made by setup_anonymeter.py.
+
+    Not resolved: on Linux and macOS `bin/python` is a symlink to the base interpreter, and
+    following it would start Python outside the venv, without the venv's packages.
+    """
     python = (ROOT / ".venv_anonymeter" /
-              ("Scripts/python.exe" if os.name == "nt" else "bin/python")).resolve()
+              ("Scripts/python.exe" if os.name == "nt" else "bin/python"))
     if not python.is_file():
         raise FileNotFoundError(
             f"Anonymeter Python was not found at {python}. Run "
@@ -79,6 +84,7 @@ def compute_secret_risk(
     }
     # Windows can briefly lock the fresh pickles (e.g. antivirus scans); a leftover temporary
     # file must not discard a finished attack.
+    python = anonymeter_python()
     with TemporaryDirectory(prefix="rna_twin_attr_", ignore_cleanup_errors=True) as temp:
         input_path = Path(temp) / "input.pkl"
         output_path = Path(temp) / "output.pkl"
@@ -86,7 +92,7 @@ def compute_secret_risk(
             pickle.dump(payload, handle, protocol=pickle.HIGHEST_PROTOCOL)
         completed = subprocess.run(
             [
-                str(anonymeter_python()), "-m", "bench_utils.attr_infer",
+                str(python), "-m", "bench_utils.attr_infer",
                 str(input_path), str(output_path),
             ],
             cwd=ROOT,
@@ -102,7 +108,9 @@ def compute_secret_risk(
             )
             suffix = f":\n{details}" if details else "."
             raise RuntimeError(
-                f"Anonymeter worker exited with code {completed.returncode}{suffix}"
+                f"Anonymeter worker ({python}) exited with code {completed.returncode}{suffix}\n"
+                "If a module is missing, rebuild the runtime from the repo root: "
+                "uv run python scripts/setup_anonymeter.py"
             )
         if completed.stdout:
             print(completed.stdout, end="")
@@ -177,11 +185,24 @@ def _compute_secret_risk(
     )
     evaluator.evaluate(n_jobs=N_JOBS)
 
-    results = evaluator.results(confidence_level=CONFIDENCE)
-    risk = evaluator.risk(confidence_level=CONFIDENCE)
-    r_baseline = evaluator.risk(
-        confidence_level=CONFIDENCE, baseline=True
-    )
+    # Anonymeter warns "Analysis results cannot be trusted" on every results() call (risk()
+    # calls it too) when the attack is no better than the baseline. Report that once per attack
+    # as one line, and pass any other warning through once.
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        results = evaluator.results(confidence_level=CONFIDENCE)
+        risk = evaluator.risk(confidence_level=CONFIDENCE)
+        r_baseline = evaluator.risk(
+            confidence_level=CONFIDENCE, baseline=True
+        )
+    messages = dict.fromkeys(str(w.message) for w in caught)
+    if any("cannot be trusted" in message for message in messages):
+        print(f"Anonymeter: attack on '{secret}' ({len(genes)} aux genes) is no better than "
+              f"baseline (attack {results.attack_rate.value:.3f}, "
+              f"baseline {results.baseline_rate.value:.3f}).")
+    for message in messages:
+        if "cannot be trusted" not in message:
+            warnings.warn(message, stacklevel=2)
 
     return {
         "secret": secret,
@@ -232,4 +253,9 @@ def _run_worker(input_path, output_path):
 if __name__ == "__main__":
     if len(sys.argv) != 3 or not in_anonymeter_runtime():
         raise SystemExit("attr_infer worker requires input and output paths.")
-    _run_worker(sys.argv[1], sys.argv[2])
+    try:
+        _run_worker(sys.argv[1], sys.argv[2])
+    except Exception:
+        print(f"Anonymeter worker interpreter: sys.executable={sys.executable}, "
+              f"sys.prefix={sys.prefix}", file=sys.stderr)
+        raise

@@ -17,6 +17,11 @@ data_all/
 legacy_old_do_not_use/
 paper2/*.*
 paper2/*
+# datasets/: only the three public releases are tracked; any new dataset folder is ignored.
+datasets/*
+!datasets/pediatric_risk/
+!datasets/sepsis/
+!datasets/tcga_luad/
 datasets/*/real_data/gen_config.yaml
 datasets/*/real_data/*.npz
 datasets/*/dbTwin/syn_*.csv

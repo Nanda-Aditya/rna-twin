@@ -1,4 +1,4 @@
-# Sepsis (GSE184900)
+# Sepsis (GSE189400)
 
 Whole-blood RNA-seq from critically ill adults in the EARLI cohort: 152 subjects, 27,097
 genes, 4 clinical columns. `real_data/` holds the real cohort and its split manifest; `dbTwin/`
@@ -7,8 +7,12 @@ holds the benchmark settings, report, and saved outputs. The synthetic CSVs are 
 
 ## Source
 
-GEO [GSE184900](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184900)
-(Kalantar et al., Nat Microbiol 2022).
+GEO [GSE189400](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE189400), the
+whole-blood (PAXgene) RNA-seq subseries of SuperSeries
+[GSE189403](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE189403)
+(Kalantar et al., Nat Microbiol 2022). The series has 221 subjects: 92 `No-Sepsis`, 60
+`SepsisBSI`, and 69 `Sepsisperiph` (sepsis from a non-bloodstream source). The 69
+`Sepsisperiph` subjects are excluded, and all 27,097 genes are kept.
 
 ## Expression (`real_data/expression.csv.gz`)
 

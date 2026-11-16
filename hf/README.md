@@ -97,7 +97,7 @@ Synthetic bulk RNA-seq cohorts with linked clinical data, each released with a b
 that shows what it preserves.
 
 This dataset holds synthetic versions of three public cohorts: pediatric inflammatory bowel
-disease (RISK, GSE57945), sepsis (GSE184900), and TCGA lung adenocarcinoma. Every synthetic
+disease (RISK, GSE57945), sepsis (GSE189400), and TCGA lung adenocarcinoma. Every synthetic
 sample has full-transcriptome expression and clinical variables, generated with
 [dbTwin](https://dbtwin.com). For each cohort you get one full synthetic cohort, five
 training-fold cohorts, and a PDF report comparing the synthetic data with the real data.
@@ -277,7 +277,7 @@ disclosure risk with DCR and two attribute-inference attacks. These are empirica
 differential privacy.
 
 The real data comes from GEO ([GSE57945](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE57945),
-[GSE184900](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184900)) and TCGA
+[GSE189400](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE189400)) and TCGA
 ([cBioPortal PanCancer Atlas](https://www.cbioportal.org/study/summary?id=luad_tcga_pan_can_atlas_2018)).
 Its original terms still apply, so please also cite the original studies, listed in each
 cohort's `README.md` in the GitHub repo. The TCGA results shown here are in whole or part based

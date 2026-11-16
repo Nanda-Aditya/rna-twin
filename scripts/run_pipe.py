@@ -44,9 +44,14 @@ def run_pipe(data, full_compute=True):
         ("create_report.py", output_dir, input_dir,
          "--cohort-name", config["cohort_name"], "--bench-config", bench_config_path)))
     for script, *arguments in commands:
-        subprocess.run(
-            [str(arg) for arg in (sys.executable, scripts / script, *arguments)],
-            check=True)
+        try:
+            subprocess.run(
+                [str(arg) for arg in (sys.executable, scripts / script, *arguments)],
+                check=True)
+        except subprocess.CalledProcessError as error:
+            raise SystemExit(
+                f"{data}: {script} failed with exit code {error.returncode}; "
+                "see the error above.") from None
 
 
 def main():

@@ -24,7 +24,7 @@ def gexp_de(frame, column, contrast):
     dds = DeseqDataSet(
         counts=frame.drop(columns=column).round().astype(int),
         metadata=labels.astype("category").to_frame("condition"),
-        design="~ condition", refit_cooks=True)
+        design="~ condition", refit_cooks=True, quiet=True)
     with parallel_backend("loky", n_jobs=6):
         dds.deseq2()
     stats = DeseqStats(dds, contrast=["condition", case, reference], quiet=True)
