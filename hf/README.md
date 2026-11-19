@@ -108,7 +108,7 @@ training-fold cohorts, and a PDF report comparing the synthetic data with the re
 among the 500 most variable genes, real below the diagonal and synthetic above.*
 
 [Benchmark code](https://github.com/Nanda-Aditya/rna-twin) ·
-Preprint (forthcoming) <!-- TODO: link the companion preprint DOI once it is assigned. --> ·
+[Preprint](https://doi.org/10.21203/rs.3.rs-11732548/v1) ·
 [HF collection](https://huggingface.co/collections/NandaAditya/dbtwin-rna-seq-benchmarks-6ae363d8070a32e0b12e71f2) ·
 [Data Use Agreement](#license-and-data-use-agreement)
 

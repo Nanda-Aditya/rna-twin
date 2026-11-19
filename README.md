@@ -5,8 +5,7 @@ Three synthetic bulk RNA-seq cohorts, publicly released with the evidence needed
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![Code: Apache 2.0](https://img.shields.io/badge/code-Apache%202.0-green.svg)](LICENSE)
 [![Data: CC BY-NC 4.0](https://img.shields.io/badge/data-CC%20BY--NC%204.0-lightgrey.svg)](hf/LICENSE)
-<!-- TODO: link the companion preprint DOI once it is assigned. -->
-![Preprint: forthcoming](https://img.shields.io/badge/preprint-forthcoming-lightgrey.svg)
+[![Preprint: Research Square](https://img.shields.io/badge/preprint-10.21203%2Frs.3.rs--11732548%2Fv1-b31b1b.svg)](https://doi.org/10.21203/rs.3.rs-11732548/v1)
 [![Hugging Face dataset](https://img.shields.io/badge/%F0%9F%A4%97%20dataset-NandaAditya%2Frna--twin-yellow.svg)](https://huggingface.co/datasets/NandaAditya/rna-twin)
 
 We generated synthetic versions of three public cohorts with dbTwin: pediatric inflammatory
